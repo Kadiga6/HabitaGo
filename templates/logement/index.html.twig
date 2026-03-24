@@ -4,464 +4,232 @@
 
 {% block body %}
 <style>
-    /* Animations personnalisées */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
-        50% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
     }
 
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    /* Styles globaux */
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 3rem 0;
-        margin-bottom: 2rem;
-        border-radius: 10px;
-        color: white;
-        animation: fadeInUp 0.6s ease-out;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        margin-bottom: 2.5rem;
     }
 
-    .page-header h1 {
-        font-size: 2.5rem;
+    .page-title {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title {
         font-weight: 700;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .page-header p {
         font-size: 1.1rem;
-        opacity: 0.95;
-        font-weight: 300;
-    }
-
-    /* Cartes améliorées */
-    .card-modern {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: fadeInUp 0.6s ease-out;
-        background: white;
-        position: relative;
-    }
-
-    .card-modern:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .card-modern::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #667eea, #764ba2);
-    }
-
-    /* Headers des cartes */
-    .card-header-modern {
-        background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-        border: none;
-        padding: 1.5rem;
-        border-bottom: 1px solid #e0e7ff;
-    }
-
-    .card-header-modern h5,
-    .card-header-modern h6 {
-        color: #333;
-        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1.25rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 10px;
     }
 
-    .card-header-modern i {
-        font-size: 1.3rem;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+    .detail-card {
+        padding: 1.5rem;
+        height: 100%;
+    }
+
+    .detail-item {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .detail-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 700;
+        color: #64748b;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 1.1rem;
+    }
+
+    .price-tag {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--primary-gradient);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-clip: text;
     }
 
-    /* Corps des cartes */
-    .card-body-modern {
-        padding: 2rem;
+    /* Consumption Mini Cards */
+    .conso-mini-card {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 16px;
+        padding: 1.25rem;
+        transition: all 0.2s ease;
     }
 
-    /* Éléments d'information */
-    .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #f8f9ff 0%, #f0f3f7 100%);
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        border-left: 4px solid #667eea;
-    }
-
-    .info-item:hover {
-        background: linear-gradient(135deg, #e8ebff 0%, #e0e3f7 100%);
-        transform: translateX(5px);
-    }
-
-    .info-label {
-        color: #667eea;
-        font-weight: 600;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .info-value {
-        color: #333;
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-
-    /* Badges modernes */
-    .badge-modern {
-        padding: 0.6rem 1.2rem;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: inline-block;
-        transition: all 0.3s ease;
-    }
-
-    .badge-modern:hover {
-        transform: scale(1.05);
-    }
-
-    .badge-success-modern {
-        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(132, 250, 176, 0.3);
-    }
-
-    .badge-danger-modern {
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(250, 112, 154, 0.3);
-    }
-
-    .badge-info-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    /* Section consommations */
-    .consumption-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-        border: 2px solid #e0e7ff;
-        border-radius: 15px;
-        padding: 1.5rem;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .consumption-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-        pointer-events: none;
-    }
-
-    .consumption-card:hover {
-        transform: translateY(-5px);
-        border-color: #667eea;
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
-    }
-
-    .consumption-title {
-        font-weight: 600;
-        color: #333;
-        font-size: 1.1rem;
-    }
-
-    .consumption-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #667eea;
-        margin-top: 0.5rem;
-    }
-
-    .consumption-unit {
-        font-size: 0.9rem;
-        color: #999;
-        font-weight: 500;
-    }
-
-    .consumption-period {
-        font-size: 0.85rem;
-        color: #999;
-        margin-top: 0.8rem;
-        font-style: italic;
-    }
-
-    /* Boutons modernes */
-    .btn-modern {
-        padding: 0.7rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .btn-modern:hover {
+    .conso-mini-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
-    .btn-modern-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-
-    /* Animations au défilement */
-    .animate-on-scroll {
-        animation: fadeInUp 0.8s ease-out;
-    }
-
-    /* Espacement */
-    .section-spacing {
-        margin-top: 3rem;
-    }
-
-    /* Icônes colorées */
-    .icon-electricity { color: #ffc107; }
-    .icon-water { color: #17a2b8; }
-    .icon-gas { color: #dc3545; }
 </style>
 
-<div class="container-fluid py-5">
-    {# En-tête de la page avec dégradé #}
-    <div class="page-header px-4">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <i class="bi bi-house-fill" style="font-size: 3.5rem; opacity: 0.95;"></i>
+<div class="container-fluid animate-fade-in">
+    <header class="page-header">
+        <h1 class="page-title">Mon Logement</h1>
+        <p class="text-muted fw-bold">Détails de votre résidence et de votre bail.</p>
+    </header>
+
+    <div class="row g-4 mb-5">
+        {# Physical Property Details #}
+        <div class="col-lg-6">
+            <div class="glass-card detail-card">
+                <h3 class="section-title"><i class="bi bi-house-door-fill text-primary"></i> Le Logement</h3>
+                
+                {% if logement %}
+                    <div class="detail-item">
+                        <span class="detail-label">Adresse complète</span>
+                        <div class="detail-value">
+                            <i class="bi bi-geo-alt-fill text-muted me-2"></i>
+                            {{ logement.adresse }}, {{ logement.codePostal }} {{ logement.ville }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Type</span>
+                                <div class="detail-value text-capitalize">{{ logement.typeLogement }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Date d'enregistrement</span>
+                                <div class="detail-value">{{ logement.dateCreation ? logement.dateCreation|date('d/m/Y') : '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-house-slash text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-3 text-muted fw-bold">Aucun logement associé à votre compte.</p>
+                    </div>
+                {% endif %}
             </div>
-            <div class="col">
-                <h1 class="mb-2">Mon Logement</h1>
-                <p class="mb-0">Consultez les informations de votre logement et ses contrats associés</p>
+        </div>
+
+        {# Lease / Contract Details #}
+        <div class="col-lg-6">
+            <div class="glass-card detail-card">
+                <h3 class="section-title"><i class="bi bi-file-earmark-text-fill text-success"></i> Votre Contrat de Bail</h3>
+                
+                {% if contrat %}
+                    <div class="detail-item">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="detail-label">Loyer mensuel</span>
+                                <div class="price-tag">{{ contrat.montantLoyer|number_format(2, ',', ' ') }} €</div>
+                            </div>
+                            <div class="col-6">
+                                <span class="detail-label">Dépôt de garantie</span>
+                                <div class="detail-value text-muted">{{ contrat.montantCaution|number_format(2, ',', ' ') }} €</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Date de début</span>
+                                <div class="detail-value text-dark">{{ contrat.dateDebut|date('d/m/Y') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Date de fin</span>
+                                <div class="detail-value">
+                                    {% if contrat.dateFin %}
+                                        {{ contrat.dateFin|date('d/m/Y') }}
+                                    {% else %}
+                                        <span class="badge bg-soft-success">CONTRAT ACTIF</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-item border-0">
+                        <span class="detail-label">Statut du contrat</span>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if contrat.statut == 'actif' %}
+                                <div class="rounded-circle bg-success" style="width: 10px; height: 10px;"></div>
+                                <span class="fw-bold text-success">Actif & Validé</span>
+                            {% else %}
+                                <div class="rounded-circle bg-warning" style="width: 10px; height: 10px;"></div>
+                                <span class="fw-bold text-warning">{{ contrat.statut|capitalize }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-file-earmark-break text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-3 text-muted fw-bold">Aucun contrat actif trouvé.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    {# Contenu principal #}
-    <div class="container-lg">
-        <div class="row g-4">
-
-            {# BLOC 1 - Logement #}
-            <div class="col-lg-6">
-                <div class="card-modern">
-                    <div class="card-header-modern">
-                        <h6 class="mb-0">
-                            <i class="bi bi-house-door"></i>
-                            Logement
-                        </h6>
-                    </div>
-
-                    <div class="card-body-modern">
-                        {% if logement %}
-                            <div class="info-item mb-3">
-                                <div>
-                                    <i class="bi bi-geo-alt me-2" style="color: #667eea; font-size: 1.3rem;"></i>
-                                    <div>
-                                        <div style="color: #667eea; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Adresse</div>
-                                        <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 0.25rem;">{{ logement.adresse }}</div>
-                                        <small style="color: #999;">{{ logement.codePostal }} – {{ logement.ville }}</small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-item">
-                                <span class="info-label">Type de logement</span>
-                                <span class="badge badge-modern badge-info-modern">
-                                    {{ logement.typeLogement|capitalize }}
-                                </span>
-                            </div>
-
-                            <div class="info-item">
-                                <span class="info-label">Créé le</span>
-                                <span class="info-value">
-                                    {{ logement.dateCreation ? logement.dateCreation|date('d/m/Y') : '—' }}
-                                </span>
-                            </div>
-                        {% else %}
-                            <div class="text-center py-5" style="color: #999;">
-                                <i class="bi bi-house-x" style="font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.5;"></i>
-                                <p class="mb-0">Aucun logement associé</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            {# BLOC 2 - Informations du contrat #}
-            <div class="col-lg-6">
-                <div class="card-modern">
-                    <div class="card-header-modern">
-                        <h6 class="mb-0">
-                            <i class="bi bi-file-text"></i>
-                            Contrat Actif
-                        </h6>
-                    </div>
-
-                    <div class="card-body-modern">
-                        {% if contrat %}
-                            <div class="info-item">
-                                <span class="info-label">💰 Loyer mensuel</span>
-                                <span style="font-size: 1.6rem; font-weight: 700; color: #84fab0;">
-                                    {{ contrat.montantLoyer|number_format(2, ',', ' ') }} €
-                                </span>
-                            </div>
-
-                            <div class="info-item">
-                                <span class="info-label">🛡️ Caution</span>
-                                <span class="info-value">{{ contrat.montantCaution|number_format(2, ',', ' ') }} €</span>
-                            </div>
-
-                            <div class="row mt-3 mb-3">
-                                <div class="col-6">
-                                    <div class="info-item">
-                                        <div>
-                                            <div class="info-label">📅 Début</div>
-                                            <div class="info-value">{{ contrat.dateDebut|date('d/m/Y') }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-6">
-                                    <div class="info-item">
-                                        <div>
-                                            <div class="info-label">📅 Fin</div>
-                                            <div class="info-value">
-                                                {% if contrat.dateFin %}
-                                                    {{ contrat.dateFin|date('d/m/Y') }}
-                                                {% else %}
-                                                    <span class="badge badge-modern badge-success-modern">En cours</span>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-item">
-                                <span class="info-label">Statut</span>
-                                {% if contrat.statut == 'actif' %}
-                                    <span class="badge badge-modern badge-success-modern">✓ Actif</span>
-                                {% elseif contrat.statut == 'résilié' %}
-                                    <span class="badge badge-modern badge-danger-modern">✗ Résilié</span>
-                                {% else %}
-                                    <span class="badge badge-modern badge-info-modern">{{ contrat.statut|capitalize }}</span>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <div class="alert alert-warning border-0" style="background: linear-gradient(135deg, #fff3cd 0%, #fffbea 100%); border-radius: 10px;">
-                                <i class="bi bi-exclamation-triangle me-2" style="color: #ff9800; font-size: 1.3rem;"></i>
-                                <strong>Aucun contrat actif trouvé.</strong>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
+    {# Consumptions Summary Section #}
+    <div class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="section-title mb-0"><i class="bi bi-lightning-charge-fill text-warning"></i> Consommations Récentes</h3>
+            <a href="{{ path('consumption') }}" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm">Historique complet</a>
         </div>
 
-        {# BLOC 3 - Résumé des consommations #}
-        <div class="section-spacing">
-            <div class="card-modern">
-                <div class="card-header-modern">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="bi bi-lightning-charge"></i>
-                            Consommations Récentes
-                        </h5>
-                        <a href="{{ path('consumption') }}" class="btn btn-modern btn-modern-primary">
-                            Voir tous les détails <i class="bi bi-arrow-right"></i>
-                        </a>
+        {% if consommations|length > 0 %}
+            <div class="row g-3">
+                {% for consumption in consommations|slice(0, 3) %}
+                    <div class="col-md-4">
+                        <div class="conso-mini-card">
+                            <div class="detail-label mb-2">
+                                {% if 'kwh' in consumption.unite|lower %}Électricité
+                                {% elseif 'm3' in consumption.unite|lower %}Consommation d'Eau
+                                {% else %}{{ consumption.unite }}{% endif %}
+                            </div>
+                            <div class="d-flex align-items-baseline gap-1">
+                                <span class="fs-3 fw-bold text-dark">{{ consumption.valeur|number_format(1, ',', ' ') }}</span>
+                                <span class="small fw-bold text-muted">{{ consumption.unite }}</span>
+                            </div>
+                            <div class="text-muted small mt-2">
+                                Période : {{ consumption.periodeDebut|date('M Y') }}
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="card-body-modern">
-                    {% if consommations|length > 0 %}
-                        <div class="row g-3">
-                            {% for consommation in consommations %}
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="consumption-card">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="consumption-title">
-                                                    {% if consommation.unite|lower == 'kwh' or consommation.unite|lower == 'kWh' %}
-                                                        <i class="bi bi-lightning-charge icon-electricity me-2"></i>Électricité
-                                                    {% elseif consommation.unite|lower == 'm3' %}
-                                                        <i class="bi bi-droplet icon-water me-2"></i>Eau
-                                                    {% elseif consommation.unite|lower == 'm3 gaz' or consommation.unite|lower == 'kwh gaz' %}
-                                                        <i class="bi bi-fire icon-gas me-2"></i>Gaz
-                                                    {% else %}
-                                                        {{ consommation.unite }}
-                                                    {% endif %}
-                                                </h6>
-                                                <div class="consumption-value">
-                                                    {{ consommation.valeur|number_format(2, ',', ' ') }}
-                                                    <span class="consumption-unit">{{ consommation.unite }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="consumption-period">
-                                            📅 {{ consommation.periodeDebut|date('d/m') }} - {{ consommation.periodeFin|date('d/m/Y') }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info border-0" style="background: linear-gradient(135deg, #d1ecf1 0%, #e7f5f8 100%); border-radius: 10px; color: #0c5460;">
-                            <i class="bi bi-info-circle me-2" style="font-size: 1.3rem;"></i>
-                            Aucune consommation enregistrée pour le moment.
-                        </div>
-                    {% endif %}
-                </div>
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <div class="text-center p-4 bg-white rounded-4 border border-light">
+                <p class="text-muted mb-0">Aucune relevé de consommation récent.</p>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

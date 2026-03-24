@@ -39,6 +39,12 @@ class PaymentsController extends AbstractController
         
         // Récupérer tous les paiements des contrats de cet utilisateur
         $contratIds = array_map(fn($c) => $c->getId(), $contrats);
+        
+        // Générer les paiements manquants pour chaque contrat
+        foreach ($contrats as $contrat) {
+            $this->paiementMetier->genererPaiementsAttendus($contrat);
+        }
+
         $paiements = [];
         if (!empty($contratIds)) {
             $paiements = $paiementRepository->findByContratIds($contratIds);
@@ -49,12 +55,19 @@ class PaymentsController extends AbstractController
             $this->paiementMetier->determinerStatut($paiement);
         }
 
-        // Calculer les statistiques
-        $stats = [
-            'payes' => count(array_filter($paiements, fn($p) => $p->getStatut() === 'paye')),
-            'en_attente' => count(array_filter($paiements, fn($p) => $p->getStatut() === 'en_attente')),
-            'en_retard' => count(array_filter($paiements, fn($p) => $p->getStatut() === 'en_retard')),
-        ];
+        // Trier les paiements par ordre chronologique décroissant (plus récent d'abord)
+        usort($paiements, function($a, $b) {
+            try {
+                $numA = $this->paiementMetier->determinerNumeroMois($a->getContrat(), $a->getPeriode());
+                $numB = $this->paiementMetier->determinerNumeroMois($b->getContrat(), $b->getPeriode());
+                return $numB <=> $numA;
+            } catch (\Exception $e) {
+                return 0;
+            }
+        });
+
+        // Calculer les statistiques globales
+        $stats = $this->paiementMetier->getStatsForUser($utilisateur);
 
         // Déterminer le paiement à régler (en attente ou en retard)
         $paiementAPayer = null;
@@ -94,7 +107,8 @@ if (!$contrat && !empty($contrats)) {
     public function pay(
         Paiement $paiement,
         Request $request,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        \App\Repository\CarteBancaireRepository $carteRepo
     ): Response
     {
         // Vérifier que l'utilisateur a accès à ce paiement
@@ -126,75 +140,25 @@ if (!$contrat && !empty($contrats)) {
                 $paiement->getPeriode()
             ));
 
-            return $this->redirectToRoute('payments_index');
+            return $this->redirectToRoute('payments_success', ['id' => $paiement->getId()]);
         }
 
         return $this->render('payments/pay.html.twig', [
             'paiement' => $paiement,
-            
             'form' => $form->createView(),
+            'cards' => $carteRepo->findBy(['utilisateur' => $this->getUser()]),
         ]);
     }
 
-    #[Route('/new', name: 'new')]
-    public function new(
-        Request $request,
-        ContratRepository $contratRepository,
-        EntityManagerInterface $em
-    ): Response
+    #[Route('/{id}/success', name: 'success')]
+    public function success(Paiement $paiement): Response
     {
-        // Récupérer l'utilisateur connecté
-        $utilisateur = $this->getUser();
-
-        // Récupérer le contrat actif de l'utilisateur
-        $contrat = $contratRepository->findActiveContractForUser($utilisateur);
-
-        if (!$contrat) {
-            $this->addFlash('warning', 'Vous n\'avez pas de contrat actif. Veuillez en configurer un d\'abord.');
-            return $this->redirectToRoute('payments_index');
+        if ($paiement->getContrat()->getUtilisateur() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
         }
 
-        // Générer automatiquement les paiements attendus
-        $this->paiementMetier->genererPaiementsAttendus($contrat);
-
-        // Créer un nouveau paiement
-        $paiement = new Paiement();
-        $paiement->setContrat($contrat);
-        $paiement->setStatut('en_attente');
-
-        $form = $this->createForm(PaiementType::class, $paiement);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Valider le paiement selon la logique métier
-            $erreurs = $this->paiementMetier->validerPaiement($paiement);
-            
-            if (!empty($erreurs)) {
-                foreach ($erreurs as $erreur) {
-                    $this->addFlash('error', $erreur);
-                }
-                return $this->redirectToRoute('payments_new');
-            }
-
-            // Enregistrer le paiement
-            $paiement->setDatePaiement(new \DateTime());
-            $paiement->setStatut('paye');
-
-            $em->persist($paiement);
-            $em->flush();
-
-            $this->addFlash('success', sprintf(
-                'Paiement pour %s effectué avec succès !',
-                $paiement->getPeriode()
-            ));
-
-            return $this->redirectToRoute('payments_index');
-        }
-
-
-        return $this->render('payments/pay.html.twig', [
+        return $this->render('payments/success.html.twig', [
             'paiement' => $paiement,
-            'form' => $form->createView(),
         ]);
     }
 }

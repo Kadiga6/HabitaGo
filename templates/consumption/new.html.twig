@@ -4,291 +4,153 @@
 
 {% block body %}
 <style>
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes slideInDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
     }
-    .consumption-form-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 3rem 0;
+
+    .page-header {
         margin-bottom: 2.5rem;
-        border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25);
-        animation: fadeInUp 0.6s ease-out;
     }
-    .consumption-form-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    .consumption-form-header p {
-        font-size: 1.1rem;
-        opacity: 0.95;
-    }
-    .form-card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.1);
-        animation: fadeInUp 0.6s ease-out;
-        background: white;
-        position: relative;
-    }
-    .form-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #667eea, #764ba2);
-    }
-    .form-group {
-        margin-bottom: 1.8rem;
-    }
-    .form-label {
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 0.7rem;
-        font-size: 0.95rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .form-label i {
-        color: #667eea;
-        font-size: 1.1rem;
-    }
-    .form-control, .form-select {
-        border: 2px solid #e0e7ff;
-        border-radius: 10px;
-        padding: 0.8rem 1rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    .input-group {
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    .input-group-text {
-        background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-        border: 2px solid #e0e7ff;
-        color: #667eea;
-        font-weight: 600;
-        padding: 0.8rem 1rem;
-    }
-    .input-group .form-control {
-        border-right: none;
-    }
-    .form-text {
-        font-size: 0.85rem;
-        color: #999;
-        margin-top: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
-    .alert-modern {
-        border: none;
-        border-radius: 12px;
-        padding: 1.5rem;
-        animation: slideInDown 0.6s ease-out;
-        margin-bottom: 1.5rem;
-        border-left: 4px solid #667eea;
-    }
-    .alert-info-modern {
-        background: linear-gradient(135deg, #d1ecf1 0%, #e7f5f8 100%);
-        color: #0c5460;
-    }
-    .form-buttons {
-        display: flex;
-        gap: 1rem;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e0e7ff;
-    }
-    .btn-modern {
-        padding: 0.9rem 2rem;
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-    }
-    .btn-primary-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    .btn-primary-modern:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        color: white;
-    }
-    .btn-secondary-modern {
-        background: white;
-        color: #667eea;
-        border: 2px solid #667eea;
-    }
-    .btn-secondary-modern:hover {
-        background: #f8f9ff;
-        transform: translateY(-2px);
-    }
-    .form-info {
-        background: linear-gradient(135deg, #f8f9ff 0%, #f0f3f7 100%);
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin-top: 2rem;
-        border-left: 4px solid #667eea;
-        animation: fadeInUp 0.8s ease-out;
-    }
-    .form-info strong {
-        color: #333;
-        display: block;
+
+    .page-title {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: #1e293b;
         margin-bottom: 0.5rem;
     }
-    .form-info p {
-        margin: 0;
-        color: #667eea;
-        font-weight: 500;
+
+    .form-section-title {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #1e293b;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
     }
+
+    .logement-badge {
+        background: rgba(102, 126, 234, 0.05);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        padding: 1rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .logement-icon {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        color: #667eea;
+    }
+
 </style>
 
-<div class="container-fluid py-5">
-    <div class="consumption-form-header px-4">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <i class="bi bi-plus-circle" style="font-size: 3rem; opacity: 0.95;"></i>
-            </div>
-            <div class="col">
-                <h1 class="mb-2">Ajouter un relevé de consommation</h1>
-                <p class="mb-0">Saisissez vos relevés d'énergie et d'eau pour suivre votre consommation</p>
+<div class="container-fluid animate-fade-in">
+    <header class="page-header d-flex align-items-center gap-3">
+        <a href="{{ path('consumption') }}" class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center p-0" style="width: 40px; height: 40px; background: white; border: none;">
+            <i class="bi bi-chevron-left text-primary"></i>
+        </a>
+        <div>
+            <h1 class="page-title mb-0">Nouveau relevé</h1>
+            <p class="text-muted fw-bold mb-0">Enregistrez vos indices pour un suivi précis.</p>
+        </div>
+    </header>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="glass-card p-4">
+                {{ form_start(form, { 'attr': { 'class': 'needs-validation' } }) }}
+                
+                <h2 class="form-section-title">
+                    <i class="bi bi-pencil-square text-primary"></i> Informations du relevé
+                </h2>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            {{ form_label(form.type, 'Type de ressource', { 'label_attr': { 'class': 'form-label fw-bold small text-uppercase text-muted' } }) }}
+                            {{ form_widget(form.type, { 'attr': { 'class': 'form-select form-glass-control' } }) }}
+                            {{ form_errors(form.type) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            {{ form_label(form.valeur, 'Index relevé', { 'label_attr': { 'class': 'form-label fw-bold small text-uppercase text-muted' } }) }}
+                            <div class="input-group">
+                                {{ form_widget(form.valeur, { 'attr': { 'class': 'form-control form-glass-control', 'placeholder': 'Ex: 1240.5' } }) }}
+                                <span class="input-group-text bg-white border-start-0" id="unite-display" style="border-radius: 0 12px 12px 0; border-color: rgba(255,255,255,0.5); font-weight: 700; color: #64748b; min-width: 60px; text-align: center;">-</span>
+                            </div>
+                            {{ form_errors(form.valeur) }}
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="form-section-title mt-4">
+                    <i class="bi bi-calendar-event text-primary"></i> Période de consommation
+                </h2>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        {{ form_label(form.periodeDebut, 'Du (Début)', { 'label_attr': { 'class': 'form-label fw-bold small text-uppercase text-muted' } }) }}
+                        {{ form_widget(form.periodeDebut, { 'attr': { 'class': 'form-control form-glass-control' } }) }}
+                        {{ form_errors(form.periodeDebut) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_label(form.periodeFin, 'Au (Fin)', { 'label_attr': { 'class': 'form-label fw-bold small text-uppercase text-muted' } }) }}
+                        {{ form_widget(form.periodeFin, { 'attr': { 'class': 'form-control form-glass-control' } }) }}
+                        {{ form_errors(form.periodeFin) }}
+                    </div>
+                </div>
+
+                <div class="mt-5 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">
+                        Enregistrer le relevé
+                    </button>
+                    <a href="{{ path('consumption') }}" class="btn btn-light rounded-pill px-4 fw-bold">
+                        Annuler
+                    </a>
+                </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
-    </div>
 
-    <div class="container-lg">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="form-card">
-                    <div class="card-body p-4">
-                        {# Affichage du formulaire #}
-                        {{ form_start(form, { 'attr': { 'novalidate': 'novalidate', 'class': 'needs-validation' } }) }}
+        <div class="col-lg-4">
+            <div class="glass-card p-4">
+                <h3 class="section-title fs-6 mb-4"><i class="bi bi-house text-primary"></i> Logement concerné</h3>
+                <div class="logement-badge">
+                    <div class="logement-icon">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <div>
+                        {% if logement %}
+                            <div class="fw-bold text-dark">{{ logement.adresse }}</div>
+                            <div class="text-muted small fw-bold">{{ logement.codePostal }} {{ logement.ville }}</div>
+                        {% else %}
+                            <div class="fw-bold text-dark">Non assigné</div>
+                        {% endif %}
+                    </div>
+                </div>
 
-                        {# Type de consommation #}
-                        <div class="form-group">
-                            {{ form_label(form.type, 'Type de consommation', { 'label_attr': { 'class': 'form-label' } }) }}
-                            {{ form_widget(form.type, { 'attr': { 'class': 'form-select' } }) }}
-                            <div class="form-text">
-                                <i class="bi bi-info-circle"></i>
-                                Sélectionnez le type de consommation que vous souhaitez enregistrer
-                            </div>
-                            {% if form.type.vars.errors %}
-                                <div class="alert alert-danger mt-2 mb-0" style="border-radius: 8px;">
-                                    {{ form_errors(form.type) }}
-                                </div>
-                            {% else %}
-                                <div class="alert alert-success mt-2 mb-0" style="border-radius: 8px;">
-                                    Aucune erreur
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        {# Valeur de consommation #}
-                        <div class="form-group">
-                            {{ form_label(form.valeur, 'Valeur consommée', { 'label_attr': { 'class': 'form-label' } }) }}
-                            <div class="input-group">
-                                {{ form_widget(form.valeur, { 'attr': { 'class': 'form-control', 'placeholder': '0.00' } }) }}
-                                <span class="input-group-text" id="unite-suffix">
-                                    <span id="unite-display">-</span>
-                                </span>
-                            </div>
-                            <div class="form-text">
-                                <i class="bi bi-info-circle"></i>
-                                L'unité sera ajustée automatiquement selon le type sélectionné
-                            </div>
-                            {% if form.valeur.vars.errors %}
-                                <div class="alert alert-danger mt-2 mb-0 small" style="border-radius: 8px;">
-                                    {{ form_errors(form.valeur) }}
-                                </div>
-                            {% else %}
-                                <div class="alert alert-success mt-2 mb-0 small" style="border-radius: 8px;">
-                                    Aucune erreur
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        {# Période de consommation #}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    {{ form_label(form.periodeDebut, 'Date de début', { 'label_attr': { 'class': 'form-label' } }) }}
-                                    {{ form_widget(form.periodeDebut, { 'attr': { 'class': 'form-control' } }) }}
-                                    {% if form.periodeDebut.vars.errors %}
-                                        <div class="alert alert-danger mt-2 mb-0 small" style="border-radius: 8px;">
-                                            {{ form_errors(form.periodeDebut) }}
-                                        </div>
-                                    {% else %}
-                                        <div class="alert alert-success mt-2 mb-0 small" style="border-radius: 8px;">
-                                            Aucune erreur
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    {{ form_label(form.periodeFin, 'Date de fin', { 'label_attr': { 'class': 'form-label' } }) }}
-                                    {{ form_widget(form.periodeFin, { 'attr': { 'class': 'form-control' } }) }}
-                                    {% if form.periodeFin.vars.errors %}
-                                        <div class="alert alert-danger mt-2 mb-0 small" style="border-radius: 8px;">
-                                            {{ form_errors(form.periodeFin) }}
-                                        </div>
-                                    {% else %}
-                                        <div class="alert alert-success mt-2 mb-0 small" style="border-radius: 8px;">
-                                            Aucune erreur
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Informations du logement #}
-                        <div class="form-info">
-                            <strong>
-                                <i class="bi bi-house-door" style="margin-right: 0.5rem; color: #667eea;"></i>
-                                Logement lié
-                            </strong>
-                            <p>{{ logement.adresse }}</p>
-                            <p style="font-size: 0.9rem; opacity: 0.8;">{{ logement.codePostal }} {{ logement.ville }}</p>
-                        </div>
-
-                        {# Boutons d'action #}
-                        <div class="form-buttons">
-                            <a href="{{ path('consumption') }}" class="btn-modern btn-secondary-modern">
-                                <i class="bi bi-arrow-left"></i>Retour
-                            </a>
-                            <button type="submit" class="btn-modern btn-primary-modern">
-                                <i class="bi bi-check-circle"></i>Enregistrer la consommation
-                            </button>
-                        </div>
-
-                        {{ form_end(form) }}
+                <div class="mt-4 p-3 rounded-4 bg-soft-info border-0">
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-info-circle-fill text-info mt-1"></i>
+                        <p class="small text-info fw-bold mb-0">
+                            Assurez-vous de saisir l'index exact figurant sur votre compteur physique.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -296,28 +158,25 @@
     </div>
 </div>
 
-{# Script pour mettre à jour dynamiquement l'unité affichée #}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const typeSelect = document.querySelector('#consommation_form_type');
-        const uniteDisplay = document.querySelector('#unite-display');
+        const typeSelectId = '{{ form.type.vars.id }}';
+        const typeSelect = document.getElementById(typeSelectId);
+        const uniteDisplay = document.getElementById('unite-display');
 
         function updateUnite() {
-            const selectedType = typeSelect.value;
-            let unite = '-';
-
-            if (selectedType === 'eau') {
-                unite = 'm³';
-            } else if (selectedType === 'electricite' || selectedType === 'gaz') {
-                unite = 'kWh';
-            }
-
-            uniteDisplay.textContent = unite;
+            const val = typeSelect.value;
+            if (val === 'eau') uniteDisplay.textContent = 'm³';
+            else if (val === 'electricite' || val === 'gaz') uniteDisplay.textContent = 'kWh';
+            else uniteDisplay.textContent = '-';
         }
 
-        updateUnite();
-        typeSelect.addEventListener('change', updateUnite);
+        if (typeSelect) {
+            updateUnite();
+            typeSelect.addEventListener('change', updateUnite);
+        }
     });
 </script>
+{% endblock %}
 
 {% endblock %}

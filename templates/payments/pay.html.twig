@@ -1,464 +1,270 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paiement - HabitaGo{% endblock %}
+{% block title %}Paiement Sécurisé - HabitaGo{% endblock %}
 
 {% block body %}
 <style>
-    /* Modern animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .pay-container {
+        max-width: 550px;
+        margin: 2rem auto;
+        perspective: 1000px;
     }
 
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.7;
-        }
-    }
-
-    /* Page header */
-    .pay-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 3rem 2rem;
-        border-radius: 15px;
-        margin-bottom: 3rem;
-        animation: fadeInUp 0.6s ease-out;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-    }
-
-    .pay-header h1 {
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .pay-header p {
-        font-size: 1rem;
-        opacity: 0.95;
-    }
-
-    .pay-header i {
-        font-size: 2.5rem;
-        margin-right: 1rem;
-        animation: slideInLeft 0.8s ease-out;
-    }
-
-    /* Card modern */
-    .card-modern {
-        border: none;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    .pay-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 32px;
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.08);
         overflow: hidden;
-        margin-bottom: 2rem;
-        animation: fadeInUp 0.6s ease-out;
+        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .card-modern:hover {
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        transform: translateY(-5px);
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px) rotateX(-5deg); }
+        to { opacity: 1; transform: translateY(0) rotateX(0); }
     }
 
-    .card-header-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .pay-header {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        padding: 2.5rem 2rem;
         color: white;
-        padding: 1.5rem;
-        border: none;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .card-header-modern h5 {
-        margin: 0;
-        font-weight: 600;
-        font-size: 1.2rem;
-    }
-
-    .card-header-modern i {
-        font-size: 1.5rem;
-    }
-
-    /* Recap table styling */
-    .recap-table {
-        margin-bottom: 0;
-    }
-
-    .recap-table tr {
-        border-bottom: 1px solid #f0f3f7;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .recap-table tr:last-child {
-        border-bottom: none;
-    }
-
-    .recap-table td {
-        padding: 1.2rem 1.5rem;
-    }
-
-    .recap-table td:first-child {
-        color: #667eea;
-        font-weight: 600;
-        width: 40%;
-    }
-
-    .recap-table td:last-child {
-        color: #333;
-        font-weight: 500;
-    }
-
-    /* Badge styling */
-    .badge-period {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .amount-badge {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
-        padding: 0.8rem 1.5rem;
-        border-radius: 10px;
-        font-size: 1.3rem;
-        font-weight: 700;
-        display: inline-block;
-    }
-
-    /* Form styling */
-    .form-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        border: 2px solid #f0f3f7;
+        text-align: center;
         position: relative;
-        transition: all 0.3s ease;
     }
 
-    .form-card::before {
+    .pay-header::after {
         content: '';
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px 12px 0 0;
+        height: 40px;
+        background: white;
+        clip-path: ellipse(60% 100% at 50% 110%);
     }
 
-    .form-card:hover {
-        border-color: #e0e0e0;
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.1);
-    }
-
-    .form-label-modern {
-        font-weight: 600;
-        color: #333;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        margin-bottom: 0.8rem;
-        display: flex;
+    .lock-icon {
+        width: 56px;
+        height: 56px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 18px;
+        display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-    }
-
-    .form-label-modern i {
-        color: #667eea;
-        font-size: 1.1rem;
-    }
-
-    .form-control:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-
-    .form-select:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-
-    /* Buttons */
-    .btn-modern {
-        border: none;
-        border-radius: 10px;
-        padding: 0.8rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-transform: uppercase;
-        font-size: 0.9rem;
-    }
-
-    .btn-modern-primary {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
-    }
-
-    .btn-modern-primary:hover {
-        color: white;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
-    }
-
-    .btn-modern-secondary {
-        background: #f0f3f7;
-        color: #667eea;
-        border: 2px solid #667eea;
-    }
-
-    .btn-modern-secondary:hover {
-        background: #667eea;
-        color: white;
-        transform: translateY(-3px);
-    }
-
-    /* Alert modern */
-    .alert-modern {
-        border: none;
-        border-radius: 10px;
-        border-left: 5px solid;
-        padding: 1.5rem;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .alert-modern-warning {
-        background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1));
-        border-left-color: #ffc107;
-        color: #856404;
-    }
-
-    .alert-modern-warning strong {
-        color: #ff9800;
-    }
-
-    .alert-modern-info {
-        background: linear-gradient(135deg, rgba(23, 162, 184, 0.1), rgba(13, 202, 240, 0.1));
-        border-left-color: #17a2b8;
-        color: #004085;
-    }
-
-    .alert-modern-info strong {
-        color: #0dcaf0;
-    }
-
-    /* Methods list styling */
-    .methods-list {
-        list-style: none;
-        padding: 0;
-    }
-
-    .methods-list li {
-        padding: 1.2rem 0;
-        border-bottom: 1px solid #f0f3f7;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .methods-list li:last-child {
-        border-bottom: none;
-    }
-
-    .methods-list li:hover {
-        padding-left: 0.5rem;
-    }
-
-    .methods-list i {
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        margin-bottom: 1.25rem;
         font-size: 1.5rem;
-        min-width: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    .methods-list strong {
-        color: #333;
-        font-size: 1rem;
+    .pay-body {
+        padding: 2rem 2.5rem 3rem;
     }
 
-    .methods-list p {
-        margin: 0.3rem 0 0 0;
-        color: #999;
-        font-size: 0.9rem;
+    .billing-summary {
+        background: #f8fafc;
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
     }
 
-    /* Container and layout */
-    .container-fluid {
-        max-width: 1200px;
-        margin: 0 auto;
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
     }
 
-    .pay-container {
-        background: #f5f7fa;
-        min-height: 100vh;
-        padding: 2rem 0;
+    .summary-label {
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.85rem;
     }
+
+    .summary-value {
+        color: #1e293b;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .total-amount {
+        border-top: 1px solid #e2e8f0;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        text-align: center;
+    }
+
+    .amount-value {
+        font-size: 2.75rem;
+        font-weight: 900;
+        color: #1e293b;
+        letter-spacing: -1px;
+    }
+
+    .method-card {
+        border: 2px solid #f1f5f9;
+        border-radius: 20px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        background: white;
+    }
+
+    .method-card.selected {
+        border-color: #4f46e5;
+        background: #f5f3ff;
+        box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.1);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        background: #f8fafc;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: #4f46e5;
+    }
+
+    .btn-pay-premium {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        width: 100%;
+        border: none;
+        padding: 1.15rem;
+        border-radius: 18px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.3);
+        transition: all 0.3s;
+    }
+
+    .btn-pay-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 40px -5px rgba(79, 70, 229, 0.4);
+    }
+
+    .secure-footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: #94a3b8;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-top: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
 </style>
 
-<div class="pay-container">
-    <div class="container-fluid">
-        <div class="pay-header">
-            <div style="display: flex; align-items: center;">
-                <i class="bi bi-credit-card"></i>
-                <div>
-                    <h1>Effectuer un paiement</h1>
-                    <p>Complétez le formulaire ci-dessous pour payer votre loyer en sécurité</p>
+<div class="container pb-5">
+    <div class="pay-container">
+        <div class="pay-card">
+            <div class="pay-header">
+                <div class="lock-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h2 class="fw-900 mb-1">Finaliser le paiement</h2>
+                <p class="small fw-bold opacity-75">Transaction cryptée en 256 bits</p>
+            </div>
+
+            <div class="pay-body">
+                <div class="billing-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Objet</span>
+                        <span class="summary-value">Loyer de {{ paiement.periode }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Locataire</span>
+                        <span class="summary-value">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                    </div>
+                    <div class="total-amount">
+                        <span class="summary-label text-uppercase small">Montant à régler</span>
+                        <div class="amount-value text-primary">{{ paiement.montant|number_format(2, ',', ' ') }} <small class="fs-4">€</small></div>
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <label class="summary-label mb-3 d-block text-uppercase">Choix du moyen de paiement</label>
+                    
+                    {{ form_start(form) }}
+                        <div class="d-flex flex-column gap-2 mb-4">
+                            {% for card in cards %}
+                                <div class="method-card {% if loop.first %}selected{% endif %}" onclick="selectCard(this, '{{ card.type }} **** {{ card.dernierQuatre }}')">
+                                    <div class="card-icon">
+                                        <i class="bi bi-credit-card-2-back-fill"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold text-dark small">{{ card.type }} **** {{ card.dernierQuatre }}</div>
+                                        <div class="text-muted" style="font-size: 0.7rem;">Exp. {{ card.dateExpiration }}</div>
+                                    </div>
+                                    <div class="check-mark">
+                                        {% if loop.first %}
+                                            <i class="bi bi-check-circle-fill text-primary"></i>
+                                        {% else %}
+                                            <i class="bi bi-circle text-muted"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="method-card selected">
+                                    <div class="card-icon">
+                                        <i class="bi bi-plus-circle-fill"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold text-dark small">Nouvelle Carte Bancaire</div>
+                                        <div class="text-muted" style="font-size: 0.7rem;">Saisie sécurisée</div>
+                                    </div>
+                                    <i class="bi bi-check-circle-fill text-primary"></i>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-none">
+                            {{ form_widget(form.moyenPaiement) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-pay-premium">
+                            Procéder au paiement
+                        </button>
+                    {{ form_end(form) }}
+                </div>
+
+                <div class="secure-footer">
+                    <i class="bi bi-lock-fill"></i>
+                    SSL Secure Transaction • PCI DSS
                 </div>
             </div>
         </div>
 
-        <div class="row g-4">
-            <div class="col-lg-8">
-                {# Récapitulatif du paiement #}
-                
-
-                {# Formulaire de paiement #}
-                <div class="card-modern">
-                    <div class="card-header-modern">
-                        <i class="bi bi-credit-card"></i>
-                        <h5>Formulaire de paiement</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-card">
-                            {{ form_start(form) }}
-                                <div class="mb-4">
-                                    <label class="form-label-modern">
-                                        <i class="bi bi-wallet2"></i>
-                                        Mode de paiement
-                                    </label>
-                                    {{ form_widget(form.moyenPaiement, {
-                                        'attr': {
-                                            'class': 'form-select form-select-lg',
-                                            'style': 'border-radius: 8px; border: 2px solid #f0f3f7; font-weight: 500; padding: 0.8rem 1rem;'
-                                        }
-                                    }) }}
-                                    {{ form_errors(form.moyenPaiement) }}
-                                </div>
-
-                                {# Informations supplémentaires selon le mode de paiement #}
-                                <div id="payment-info" class="alert alert-modern alert-modern-info" style="display: none; margin-bottom: 1.5rem;">
-                                    <strong>
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        Instructions de paiement
-                                    </strong>
-                                    <small id="payment-details" style="display: block; margin-top: 0.5rem; line-height: 1.6;"></small>
-                                </div>
-
-                                <div class="d-flex gap-3 flex-wrap">
-                                    <button type="submit" class="btn btn-modern btn-modern-primary flex-grow-1" style="min-width: 200px;">
-                                        <i class="bi bi-check-circle me-2"></i>
-                                        Valider le paiement
-                                    </button>
-                                    <a href="{{ path('payments_index') }}" class="btn btn-modern btn-modern-secondary flex-grow-1" style="min-width: 200px; text-decoration: none;">
-                                        <i class="bi bi-x-circle me-2"></i>
-                                        Annuler
-                                    </a>
-                                </div>
-                            {{ form_end(form) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {# Informations importantes et modes disponibles #}
-            <div class="col-lg-4">
-                {# Carte d'avertissement #}
-                <div class="alert alert-modern alert-modern-warning" style="margin-bottom: 1.5rem;">
-                    <strong>
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Paiement simulé
-                    </strong>
-                    <p class="small mt-2 mb-0">
-                        Ce paiement est simulé et ne génère pas de transaction bancaire réelle. 
-                        Une fois validé, votre paiement sera enregistré comme effectué.
-                    </p>
-                </div>
-
-                {# Modes de paiement #}
-                <div class="card-modern">
-                    <div class="card-header-modern">
-                        <i class="bi bi-credit-card"></i>
-                        <h5>Modes disponibles</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="methods-list">
-                            <li>
-                                <i class="bi bi-credit-card text-primary"></i>
-                                <div>
-                                    <strong>Carte bancaire</strong>
-                                    <p>Débit immédiat et sécurisé</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="bi bi-bank text-info"></i>
-                                <div>
-                                    <strong>Virement bancaire</strong>
-                                    <p>Virement vers votre gestionnaire</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="bi bi-cash-coin text-success"></i>
-                                <div>
-                                    <strong>Espèces</strong>
-                                    <p>Remise en main propre</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="text-center mt-3">
+            <a href="{{ path('payments_index') }}" class="btn btn-link text-muted text-decoration-none small fw-bold">
+                <i class="bi bi-arrow-left me-1"></i> Annuler le paiement
+            </a>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const selectMoyen = document.getElementById('paiement_form_moyenPaiement');
-        const infoDiv = document.getElementById('payment-info');
-        const detailsSpan = document.getElementById('payment-details');
-
-        const paymentMessages = {
-            'carte_bancaire': 'Veuillez utiliser votre numéro de carte bancaire pour effectuer le paiement de façon sécurisée.',
-            'virement': 'Veuillez effectuer un virement bancaire aux coordonnées fournies par votre propriétaire ou gestionnaire.',
-            'especes': 'Veuillez remettre le montant en espèces directement à votre propriétaire ou gestionnaire immédiatement.'
-        };
-
-        function updatePaymentInfo() {
-            const selectedValue = selectMoyen.value;
-            if (selectedValue && paymentMessages[selectedValue]) {
-                detailsSpan.textContent = paymentMessages[selectedValue];
-                infoDiv.style.display = 'block';
-            } else {
-                infoDiv.style.display = 'none';
-            }
-        }
-
-        selectMoyen.addEventListener('change', updatePaymentInfo);
-        updatePaymentInfo(); // Appel initial
-    });
+    function selectCard(element, value) {
+        document.querySelectorAll('.method-card').forEach(c => {
+            c.classList.remove('selected');
+            c.querySelector('.check-mark').innerHTML = '<i class="bi bi-circle text-muted"></i>';
+        });
+        
+        element.classList.add('selected');
+        element.querySelector('.check-mark').innerHTML = '<i class="bi bi-check-circle-fill text-primary"></i>';
+        
+        document.querySelector('#paiement_moyenPaiement').value = value;
+    }
 </script>
-
 {% endblock %}

@@ -1,333 +1,210 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Mon Profil - HabitaGo{% endblock %}
+
 {% block body %}
 <style>
-    /* Profile page animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Profile container */
-    .profile-container {
-        background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-        min-height: 100vh;
-        padding: 3rem 0;
-    }
-
-    /* Header section */
-    .profile-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .profile-header-premium {
+        background: var(--primary-gradient);
+        border-radius: 24px;
+        padding: 3rem;
         color: white;
-        padding: 3rem 2rem;
-        border-radius: 15px;
-        margin-bottom: 3rem;
-        animation: fadeInUp 0.6s ease-out;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25);
-        display: flex;
-        align-items: center;
-        gap: 2rem;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
     }
 
-    .profile-avatar-lg {
-        width: 100px;
-        height: 100px;
+    .profile-header-premium::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255,255,255,0.1);
         border-radius: 50%;
+        filter: blur(80px);
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+    }
+
+    .avatar-large {
+        width: 120px;
+        height: 120px;
         background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 35px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.5rem;
-        font-weight: 700;
-        border: 3px solid rgba(255, 255, 255, 0.3);
-        flex-shrink: 0;
+        font-size: 3rem;
+        font-weight: 800;
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
-    .profile-header-info h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .profile-header-info p {
-        font-size: 1rem;
-        opacity: 0.95;
-        margin-bottom: 1rem;
-    }
-
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(255, 255, 255, 0.2);
-        padding: 0.6rem 1.2rem;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    /* Alert modern */
-    .alert-modern {
-        background: white;
-        border: none;
-        border-left: 5px solid #17a2b8;
-        border-radius: 10px;
-        padding: 1.5rem;
-        animation: fadeInUp 0.6s ease-out;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    .alert-modern i {
-        color: #17a2b8;
-        font-size: 1.3rem;
-    }
-
-    /* Card modern */
-    .card-modern {
-        border: none;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
-        margin-bottom: 2rem;
-    }
-
-    .card-modern:hover {
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-        transform: translateY(-8px);
-    }
-
-    .card-modern .card-body {
-        padding: 2rem;
-    }
-
-    /* Section title */
-    .profile-section-title {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #333;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f0f3f7;
-        margin-bottom: 1.5rem !important;
-    }
-
-    .profile-section-title i {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-size: 1.4rem;
-    }
-
-    /* Info row */
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.2rem 0;
-        border-bottom: 1px solid #f0f3f7;
-        transition: all 0.3s ease;
-    }
-
-    .info-row:last-child {
-        border-bottom: none;
-    }
-
-    .info-row:hover {
-        background: #f9f9f9;
-        padding: 1.2rem;
-        margin: 0 -2rem;
-        border-radius: 8px;
+    .status-indicator {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 24px;
+        height: 24px;
+        background: #10b981;
+        border: 4px solid #764ba2;
+        border-radius: 50%;
     }
 
     .info-label {
-        color: #666;
-        font-weight: 600;
-        font-size: 0.9rem;
+        font-weight: 700;
+        color: #64748b;
+        font-size: 0.75rem;
         text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
     }
 
     .info-value {
-        font-weight: 500;
-        color: #333;
-        font-size: 1rem;
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 1.1rem;
     }
 
-    /* Buttons */
-    .btn-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 0.7rem 1.5rem;
+    .activity-item {
+        padding: 1rem;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.02);
+        border-left: 4px solid var(--primary-color);
+        margin-bottom: 1rem;
     }
 
-    .btn-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-modern:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    /* Delays */
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
 </style>
 
-<div class="profile-container">
-    <div class="container-lg">
-        {# En-tête moderne #}
-        <div class="profile-header">
-            <div class="profile-avatar-lg">{{ app.user.initials }}</div>
-            <div class="profile-header-info">
-                <h1>{{ app.user.prenom }} {{ app.user.nom }}</h1>
-                <p>Locataire depuis le {{ housing.dateCreation|date('d/m/Y') }}</p>
-                <span class="status-badge">
-                    <i class="bi bi-check-circle-fill"></i>
-                    Compte actif
-                </span>
+<div class="container-fluid animate-fade-in">
+    {# Main Profile Header #}
+    <div class="profile-header-premium">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <div class="avatar-wrapper">
+                    <div class="avatar-large">
+                        {{ app.user.initials }}
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+            </div>
+            <div class="col ms-md-4 mt-4 mt-md-0">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <h1 class="display-6 fw-extrabold mb-0">{{ app.user.prenom }} {{ app.user.nom }}</h1>
+                    <span class="badge bg-white text-primary rounded-pill px-3 fw-bold">Locataire</span>
+                </div>
+                <p class="text-white opacity-75 fw-bold mb-4">
+                    <i class="bi bi-calendar3 me-2"></i>Membre depuis le {{ housing and housing.dateCreation ? housing.dateCreation|date('M Y') : 'Mars 2024' }}
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('settings') }}" class="btn btn-white btn-sm rounded-pill px-4 fw-bold">
+                        <i class="bi bi-pencil-square me-2"></i>Éditer le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {# General Info #}
+        <div class="col-lg-8">
+            <div class="glass-card h-100 p-4">
+                <h3 class="section-title mb-4"><i class="bi bi-person-lines-fill text-primary"></i> Coordonnées & Sécurité</h3>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-4 bg-light border-0">
+                            <div class="info-label">Nom Complet</div>
+                            <div class="info-value">{{ app.user.prenom }} {{ app.user.nom }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-4 bg-light border-0">
+                            <div class="info-label">Adresse E-mail</div>
+                            <div class="info-value">{{ app.user.email }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-4 bg-light border-0">
+                            <div class="info-label">Identifiant Unique</div>
+                            <div class="info-value text-muted">ID: #{{ app.user.id|default('---') }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-4 bg-light border-0">
+                            <div class="info-label">Statut du compte</div>
+                            <div class="info-value text-success"><i class="bi bi-shield-check me-2"></i>Vérifié</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-title mb-4 mt-5"><i class="bi bi-house-heart text-primary"></i> Résidence actuelle</h3>
+                {% if housing %}
+                    <div class="p-4 rounded-4 bg-soft-primary border-0">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="bg-white p-3 rounded-4 shadow-sm text-primary fs-3">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="fw-extrabold text-dark fs-5 mb-1">{{ housing.adresse }}</div>
+                                <div class="text-muted fw-bold">{{ housing.codePostal }} {{ housing.ville }}</div>
+                                <div class="mt-2">
+                                    <span class="badge bg-primary rounded-pill px-3">{{ housing.typeLogement }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning border-0 rounded-4 fw-bold">
+                        <i class="bi bi-exclamation-octagon me-2"></i> Aucun logement associé à votre compte.
+                    </div>
+                {% endif %}
             </div>
         </div>
 
-        {# Alerte info moderne #}
-        <div class="row mb-4 delay-1">
-            <div class="col-12">
-                <div class="alert-modern d-flex align-items-center" role="alert">
-                    <i class="bi bi-info-circle-fill me-3 flex-shrink-0"></i>
-                    <div>
-                        <strong>Profil complet :</strong> Vos informations personnelles sont à jour et sécurisées.
-                    </div>
+        {# Sidebar Info #}
+        <div class="col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <h3 class="section-title fs-6 mb-4"><i class="bi bi-activity text-primary"></i> Activité récente</h3>
+                <div class="activity-item">
+                    <div class="fw-bold text-dark small">Dernière connexion</div>
+                    <div class="text-muted small">Aujourd'hui, à l'instant</div>
+                </div>
+                <div class="activity-item" style="border-left-color: #10b981;">
+                    <div class="fw-bold text-dark small">Paiement validé</div>
+                    <div class="text-muted small">Il y a 2 jours</div>
                 </div>
             </div>
-        </div>
 
-        <div class="row g-4 delay-2">
-            {# Colonne principale #}
-            <div class="col-lg-8">
-                {# Informations personnelles #}
-                <div class="card-modern">
-                    <div class="card-body">
-                        <h5 class="profile-section-title">
-                            <i class="bi bi-person-circle"></i>Informations personnelles
-                        </h5>
-
-                        <div class="info-row">
-                            <span class="info-label">Nom complet</span>
-                            <span class="info-value">{{ app.user.prenom }} {{ app.user.nom }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Adresse e-mail</span>
-                            <span class="info-value">{{ app.user.email }}</span>
-                        </div>
-
-
-                        <!-- <div style="margin-top: 2rem;">
-                            <button class="btn btn-modern" disabled>
-                                <i class="bi bi-pencil-square me-2"></i>Modifier mes informations
-                            </button>
-                        </div> -->
-                    </div>
+            <div class="glass-card p-4 bg-primary text-white border-0 position-relative overflow-hidden shadow-lg">
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 5rem; opacity: 0.1;">
+                    <i class="bi bi-lightning-charge-fill"></i>
                 </div>
-
-                {# Informations du logement #}
-                <div class="card-modern">
-                    <div class="card-body">
-                        <h5 class="profile-section-title">
-                            <i class="bi bi-house-door"></i>Informations du logement
-                        </h5>
-                        {% if housing %}
-                            <div class="info-row">
-                                <span class="info-label">Adresse</span>
-                                <span class="info-value">{{ housing.address }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Code Postal</span>
-                                <span class="info-value">{{ housing.codePostal }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Ville</span>
-                                <span class="info-value">{{ housing.ville }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Type de logement</span>
-                                <span class="info-value">{{ housing.typeLogement }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Depuis le</span>
-                                <span class="info-value">{{ housing.dateCreation|date('d/m/Y') }}</span>
-                            </div>
-                        {% else %}
-                            <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05)); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #667eea;">
-                                <p style="color: #666; margin: 0;">Aucun logement actif actuellement. Veuillez configurer un contrat de location.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-            </div>
-
-            {# Colonne latérale #}
-            <div class="col-lg-4">
-               
-
-                {# Activité récente #}
-                <div class="card-modern delay-3">
-                    <div class="card-body">
-                        <h5 class="profile-section-title">
-                            <i class="bi bi-clock-history"></i>Activité récente
-                        </h5>
-
-                        <div style="padding: 1rem; background: #f9f9f9; border-radius: 8px; border-left: 3px solid #28a745;">
-                            <div style="font-weight: 600; color: #333; margin-bottom: 0.3rem;">Connexion</div>
-                            <small style="color: #999;">Aujourd'hui</small>
-                        </div>
-                    </div>
-                </div>
-
-                {# Actions rapides #}
-                <div class="card-modern delay-3">
-                    <div class="card-body">
-                        <h5 class="profile-section-title">
-                            <i class="bi bi-lightning-fill"></i>Actions rapides
-                        </h5>
-
-                        <div class="d-grid gap-2">
-                            <a href="{{ path('settings') }}" class="btn btn-modern" style="text-decoration: none;">
-                                <i class="bi bi-gear me-2"></i>Aller aux paramètres
-                            </a>
-                          
-                        </div>
-                    </div>
-                </div>
+                <h4 class="fw-extrabold mb-3">Besoin d'aide ?</h4>
+                <p class="small opacity-75 fw-bold mb-4">Notre support est disponible 24/7 pour vous accompagner dans vos démarches.</p>
+                <a href="{{ path('issues_new') }}" class="btn btn-white btn-sm rounded-pill px-4 fw-bold w-100 shadow-sm">
+                    Ouvrir un ticket
+                </a>
             </div>
         </div>
     </div>

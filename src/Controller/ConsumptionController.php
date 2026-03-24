@@ -48,13 +48,13 @@ class ConsumptionController extends AbstractController
         foreach ($consommations as $conso) {
             // Vérifier si la consommation est du mois en cours
             if ($conso->getPeriodeDebut() >= $moisActuel && $conso->getPeriodeFin() <= $finMois) {
-                if ($conso->getUnite() === 'kWh') {
-                    // Déterminer si c'est électricité ou gaz
-                    // On suppose une distinction via le contexte ou une colonne supplémentaire
-                    // Pour l'instant, compter tout comme électricité
+                $type = strtolower($conso->getType());
+                if (str_contains($type, 'elec')) {
                     $totalElectricite += (float) $conso->getValeur();
-                } elseif ($conso->getUnite() === 'm³') {
+                } elseif (str_contains($type, 'eau')) {
                     $totalEau += (float) $conso->getValeur();
+                } elseif (str_contains($type, 'gaz')) {
+                    $totalGaz += (float) $conso->getValeur();
                 }
             }
         }

@@ -1,343 +1,324 @@
-{# Navbar moderne et dynamique #}
 <style>
-    /* Navbar moderne */
-    .navbar-modern {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        border-bottom: 2px solid;
-        border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%) 1;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        padding: 1rem 0;
-        position: sticky;
+/* Sidebar Setup */
+.sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.85); /* Plus opaque pour plus de consistance */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    z-index: 1040;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-header {
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+/* Nav Links */
+.sidebar-nav {
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: auto;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.nav-item-glass {
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item-glass i {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.nav-item-glass:hover {
+    color: var(--primary-color);
+    background: rgba(102, 126, 234, 0.08);
+    transform: translateX(4px);
+}
+
+.nav-item-glass.active {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);
+}
+
+.nav-item-glass.active i {
+    opacity: 1;
+}
+
+/* User Card Bottom */
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-glass-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #1e293b;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.user-glass-card:hover, .user-glass-card[aria-expanded="true"] {
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    flex-shrink: 0;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #0f172a;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.user-dropdown-menu {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    min-width: 240px;
+    margin-bottom: 0.5rem !important;
+}
+
+.user-dropdown-item {
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #475569;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-dropdown-item:hover {
+    background: rgba(102, 126, 234, 0.08);
+    color: var(--primary-color);
+}
+
+.user-dropdown-item.text-danger:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+}
+
+/* Mobile offcanvas */
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.collapse.show {
+        transform: translateX(0);
+    }
+
+    /* Mobile Backdrop */
+    .sidebar-backdrop {
+        position: fixed;
         top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
         z-index: 1030;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .navbar-modern:hover {
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
-    }
-
-    /* Brand moderne */
-    .navbar-brand-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-weight: 700;
-        font-size: 1.3rem;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
+        opacity: 0;
+        visibility: hidden;
         transition: all 0.3s ease;
     }
 
-    .navbar-brand-modern:hover {
-        transform: scale(1.05);
+    .sidebar-backdrop.show {
+        opacity: 1;
+        visibility: visible;
     }
-
-    .navbar-brand-modern svg {
-        stroke: url(#grad);
-    }
-
-    /* Navigation items */
-    .nav-link-modern {
-        font-weight: 500;
-        color: #333 !important;
-        padding: 0.6rem 1.2rem !important;
-        border-radius: 8px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-
-    .nav-link-modern::before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        transition: all 0.3s ease;
-        transform: translateX(-50%);
-        border-radius: 3px 3px 0 0;
-    }
-
-    .nav-link-modern:hover {
-        background: rgba(102, 126, 234, 0.08);
-        color: #667eea !important;
-        transform: translateY(-2px);
-    }
-
-    .nav-link-modern:hover::before {
-        width: 60%;
-    }
-
-    .nav-link-modern.active {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-        color: #667eea !important;
-    }
-
-    .nav-link-modern.active::before {
-        width: 60%;
-    }
-
-    /* Avatar circle */
-    .avatar-circle {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        transition: all 0.3s ease;
-    }
-
-    .avatar-circle:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    /* User dropdown button */
-    .user-menu-btn {
-        background: white !important;
-        border: 2px solid #f0f3f7 !important;
-        border-radius: 10px !important;
-        padding: 0.5rem 1rem !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        font-weight: 500;
-        color: #333 !important;
-    }
-
-    .user-menu-btn:hover {
-        border-color: #667eea !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-        background: rgba(102, 126, 234, 0.03) !important;
-    }
-
-    .user-menu-btn:focus {
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
-    }
-
-    /* Dropdown menu */
-    .dropdown-menu-modern {
-        border: none !important;
-        border-radius: 12px !important;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15) !important;
-        padding: 0.8rem 0 !important;
-        animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .dropdown-item-modern {
-        padding: 0.7rem 1.5rem !important;
-        color: #333 !important;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-    }
-
-    .dropdown-item-modern:hover {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05)) !important;
-        border-left-color: #667eea;
-        color: #667eea !important;
-        padding-left: 1.8rem !important;
-    }
-
-    .dropdown-item-modern.logout {
-        color: #dc3545 !important;
-    }
-
-    .dropdown-item-modern.logout:hover {
-        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(253, 126, 20, 0.05)) !important;
-        border-left-color: #dc3545;
-        color: #dc3545 !important;
-    }
-
-    /* Auth buttons */
-    .btn-auth-login {
-        border: 2px solid #667eea;
-        color: #667eea !important;
-        font-weight: 600;
-        border-radius: 8px;
-        padding: 0.6rem 1.2rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .btn-auth-login:hover {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
-        border-color: transparent;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-auth-signup {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
-        font-weight: 600;
-        border: none;
-        border-radius: 8px;
-        padding: 0.6rem 1.2rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .btn-auth-signup:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
-    }
-
-    /* Icons styling */
-    .nav-icon {
-        font-size: 1.1rem;
-    }
-
-    /* Mobile toggle */
-    .navbar-toggler-modern {
-        border: none !important;
-        padding: 0.25rem 0.5rem !important;
-    }
-
-    .navbar-toggler-modern:focus {
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
-    }
-
-    /* Responsive */
-    @media (max-width: 991px) {
-        .nav-link-modern {
-            padding: 0.8rem 1rem !important;
-            margin: 0.3rem 0;
-        }
-
-        .navbar-modern {
-            padding: 0.8rem 0;
-        }
-    }
+}
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-modern">
-    <div class="container-fluid px-4">
-        {# Logo / Brand #}
-        <a class="navbar-brand navbar-brand-modern" href="{{ path('app_dashboard') }}">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <path d="M12 3L3 9V21H21V9L12 3Z" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                <path d="M9 21V12H15V21" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>HabitaGo</span>
-        </a>
+{# Mobile backdrop #}
+<div class="sidebar-backdrop d-lg-none" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"></div>
 
-        {# Toggle button pour mobile #}
-        <button class="navbar-toggler navbar-toggler-modern" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        {# Navigation principale #}
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link-modern {{ app.request.attributes.get('_route') starts with 'app_dashboard' ? 'active' : '' }}" href="{{ path('app_dashboard') }}">
-                        <i class="bi bi-speedometer2 nav-icon"></i>
-                        Dashboard
-                    </a>
-                </li>
-               
-                <li class="nav-item">
-                    <a class="nav-link-modern {{ app.request.attributes.get('_route') starts with 'app_logement' ? 'active' : '' }}" href="{{ path('app_logement') }}">
-                        <i class="bi bi-house-door nav-icon"></i>Mon Logement
-                    </a>
-                </li>
-               
-                <li class="nav-item">
-                    <a class="nav-link-modern {{ app.request.attributes.get('_route') starts with 'payments' ? 'active' : '' }}" href="{{ path('payments_index') }}">
-                        <i class="bi bi-cash-coin nav-icon"></i>Paiements
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link-modern {{ app.request.attributes.get('_route') starts with 'consumption' ? 'active' : '' }}" href="{{ path('consumption') }}">
-                        <i class="bi bi-lightning-charge nav-icon"></i>Consommations
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link-modern {{ app.request.attributes.get('_route') starts with 'issues' ? 'active' : '' }}" href="{{ path('issues') }}">
-                        <i class="bi bi-tools nav-icon"></i>Incidents
-                    </a>
-                </li>
-            </ul>
-
-            {# Actions utilisateur #}
-            <div class="d-flex align-items-center gap-3">
-                {# Dropdown compte utilisateur #}
-                {% if app.user %}
-                    <div class="dropdown">
-                        <button class="btn user-menu-btn dropdown-toggle"
-                                type="button"
-                                id="userMenu"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            <div class="avatar-circle">
-                                <span>{{ app.user.initials }}</span>
-                            </div>
-                            <span class="d-none d-md-inline">{{ app.user.prenom }}</span>
-                        </button>
-
-                        <ul class="dropdown-menu dropdown-menu-modern dropdown-menu-end" aria-labelledby="userMenu">
-                            <li>
-                                <a class="dropdown-item dropdown-item-modern" href="{{ path('profile') }}">
-                                    <i class="bi bi-person me-2"></i>Mon profil
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item dropdown-item-modern" href="{{ path('settings') }}">
-                                    <i class="bi bi-gear me-2"></i>Paramètres
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider m-1">
-                            </li>
-                            <li>
-                                <a class="dropdown-item dropdown-item-modern logout" href="{{ path('app_logout') }}">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Se déconnecter
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <div class="d-flex gap-2">
-                        <a href="{{ path('app_login') }}" class="btn btn-auth-login">
-                            Connexion
-                        </a>
-                        <a href="{{ path('app_register') }}" class="btn btn-auth-signup">
-                            Inscription
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+<aside class="sidebar collapse d-lg-flex" id="sidebarCollapse">
+    <div class="sidebar-header">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M12 3L3 9V21H21V9L12 3Z" stroke="url(#brandGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M9 21V12H15V21" stroke="url(#brandGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand-text">HabitaGo</span>
     </div>
-</nav>
+
+    <nav class="sidebar-nav">
+        <a class="nav-item-glass {{ app.request.attributes.get('_route') starts with 'app_dashboard' ? 'active' : '' }}" href="{{ path('app_dashboard') }}">
+            <i class="bi bi-grid-1x2-fill"></i>
+            Tableau de Bord
+        </a>
+        
+        <a class="nav-item-glass {{ app.request.attributes.get('_route') starts with 'app_logement' ? 'active' : '' }}" href="{{ path('app_logement') }}">
+            <i class="bi bi-house-door-fill"></i>
+            Mon Logement
+        </a>
+        
+        <a class="nav-item-glass {{ app.request.attributes.get('_route') starts with 'payments' ? 'active' : '' }}" href="{{ path('payments_index') }}">
+            <i class="bi bi-credit-card-fill"></i>
+            Paiements
+        </a>
+        
+        <a class="nav-item-glass {{ app.request.attributes.get('_route') starts with 'consumption' ? 'active' : '' }}" href="{{ path('consumption') }}">
+            <i class="bi bi-lightning-charge-fill"></i>
+            Consommations
+        </a>
+        
+        <a class="nav-item-glass {{ app.request.attributes.get('_route') starts with 'issues' ? 'active' : '' }}" href="{{ path('issues') }}">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            Incidents
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        {% if app.user %}
+            <div class="dropdown dropup">
+                <div class="user-glass-card" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                    <div class="avatar-circle">
+                        {{ app.user.initials }}
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                        <span class="user-role">Locataire Pro</span>
+                    </div>
+                    <i class="bi bi-chevron-up text-muted ms-auto" style="font-size: 0.8rem;"></i>
+                </div>
+                
+                <ul class="dropdown-menu user-dropdown-menu">
+                    <li><h6 class="dropdown-header">Mon Compte</h6></li>
+                    <li>
+                        <a class="dropdown-item user-dropdown-item" href="{{ path('profile') }}">
+                            <i class="bi bi-person-circle"></i> Profil locataire
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item user-dropdown-item" href="{{ path('settings') }}">
+                            <i class="bi bi-gear-fill"></i> Paramètres
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item user-dropdown-item text-danger" href="{{ path('app_logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            <div class="d-flex flex-column gap-2">
+                <a href="{{ path('app_login') }}" class="btn btn-outline-primary" style="border-radius: 12px; font-weight: 600;">Connexion</a>
+                <a href="{{ path('app_register') }}" class="btn btn-primary" style="border-radius: 12px; font-weight: 600; background: var(--primary-gradient); border: none;">Inscription</a>
+            </div>
+        {% endif %}
+    </div>
+</aside>
+
+<script>
+    // Script pour gérer l'affichage du fond noir semi-transparent sur mobile
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebarCollapse');
+        const backdrop = document.querySelector('.sidebar-backdrop');
+        
+        if(sidebar && backdrop) {
+            sidebar.addEventListener('show.bs.collapse', () => {
+                backdrop.classList.add('show');
+            });
+            
+            sidebar.addEventListener('hide.bs.collapse', () => {
+                backdrop.classList.remove('show');
+            });
+        }
+    });
+</script>

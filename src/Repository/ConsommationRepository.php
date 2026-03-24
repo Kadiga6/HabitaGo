@@ -55,8 +55,12 @@ class ConsommationRepository extends ServiceEntityRepository
 
         foreach ($results as $row) {
             $type = strtolower($row['type']);
-            if (isset($totaux[$type])) {
-                $totaux[$type] = (float) $row['total'];
+            if (str_contains($type, 'elec')) {
+                $totaux['electricite'] = (float) $row['total'];
+            } elseif (str_contains($type, 'eau')) {
+                $totaux['eau'] = (float) $row['total'];
+            } elseif (str_contains($type, 'gaz')) {
+                $totaux['gaz'] = (float) $row['total'];
             }
         }
 

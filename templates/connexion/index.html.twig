@@ -3,69 +3,66 @@
 {% block title %}Connexion - HabitaGo{% endblock %}
 
 {% block body %}
-<div class="login-container">
-    <!-- Colonne gauche : Image + Overlay -->
-    <div class="login-left">
-        <div class="login-left-bg">
-            <!-- Logo HabitaGo -->
-            <div class="login-logo">
-                <h2 class="fw-bold">🏠 HabitaGo</h2>
-            </div>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-            <!-- Texte d'accroche -->
-            <div class="login-tagline">
-                <h3 class="text-white fw-bold">Gérez votre logement</h3>
-                <p class="text-white-50">Simplement et efficacement</p>
-            </div>
-        </div>
-    </div>
+<div class="login-wrapper">
+    <!-- Image et Gradient en arrière-plan global -->
+    <div class="login-bg"></div>
 
-    <!-- Colonne droite : Formulaire -->
-    <div class="login-right">
-        <div class="login-form-wrapper">
-            <!-- En-tête du formulaire -->
-            <div class="login-header mb-5">
-                <h1 class="login-title">Bienvenue sur HabitaGo</h1>
-                <p class="login-subtitle">Connectez-vous pour accéder à votre espace</p>
-            </div>
-
-            <!-- Message d'erreur -->
-        {% if error %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-circle-fill me-2"></i>
-        Email ou mot de passe incorrect
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-{% endif %}
-
-            <!-- Formulaire de connexion -->
-            <form method="post" action="{{ path('app_login') }}" class="login-form">
-                <!-- Champ Email -->
-                <div class="form-group mb-4">
-                    <label for="email" class="form-label">Adresse email</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        class="form-control form-control-lg" 
-                        value="{{ last_email }}"
-                        required
-                        placeholder="votre@email.com"
-                    />
+    <div class="login-container">
+        <!-- Colonne droite : Formulaire en Glassmorphism -->
+        <div class="login-glass-panel">
+            <div class="login-form-wrapper">
+                
+                <!-- Logo -->
+                <div class="text-center mb-4 login-logo-container">
+                    <div class="logo-icon">🏠</div>
+                    <h2 class="fw-bold m-0 login-brand">HabitaGo</h2>
                 </div>
 
-                <!-- Champ Mot de passe -->
-                <div class="form-group mb-4">
-                    <label for="password" class="form-label">Mot de passe</label>
-                    <div class="password-input-wrapper">
+                <!-- En-tête du formulaire -->
+                <div class="login-header mb-5">
+                    <h1 class="login-title">Bon retour !</h1>
+                    <p class="login-subtitle">Connectez-vous pour gérer vos logements en toute sérénité.</p>
+                </div>
+
+                <!-- Message d'erreur -->
+                {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
+                        <i class="bi bi-exclamation-octagon-fill me-2"></i>
+                        <span>Email ou mot de passe incorrect</span>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <!-- Formulaire de connexion -->
+                <form method="post" action="{{ path('app_login') }}" class="login-form">
+                    
+                    <!-- Champ Email -->
+                    <div class="form-floating mb-4 custom-form-floating">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-control premium-input" 
+                            value="{{ last_email }}"
+                            required
+                            placeholder="votre@email.com"
+                        />
+                        <label for="email">Adresse email</label>
+                    </div>
+
+                    <!-- Champ Mot de passe -->
+                    <div class="form-floating mb-4 custom-form-floating password-wrapper">
                         <input 
                             type="password" 
                             id="password" 
                             name="motDePasse" 
-                            class="form-control form-control-lg" 
+                            class="form-control premium-input" 
                             required
                             placeholder="Entrez votre mot de passe"
                         />
+                        <label for="password">Mot de passe</label>
                         <button 
                             type="button" 
                             class="password-toggle" 
@@ -75,273 +72,332 @@
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
-                </div>
 
-                <!-- Checkbox et lien Mot de passe oublié -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="form-check">
-                        
-                       
+                    <!-- Ligne Mot de passe oublié -->
+                    <div class="d-flex justify-content-end mb-4">
+                        <a href="#" class="forgot-password-link">Mot de passe oublié ?</a>
                     </div>
-                    <a href="#" class="forgot-password-link">Mot de passe oublié?</a>
-                </div>
 
-                <!-- Bouton de connexion -->
-                <button type="submit" class="btn btn-login w-100 mb-4">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                    Se connecter
-                </button>
+                    <!-- Bouton de connexion -->
+                    <button type="submit" class="btn btn-login w-100 mb-4">
+                        <span>Se connecter</span>
+                        <i class="bi bi-arrow-right icon-right"></i>
+                    </button>
 
-                <!-- Divider -->
-                <div class="divider mb-4">
-                    <span class="divider-text">Nouveau sur HabitaGo?</span>
-                </div>
+                    <!-- Divider -->
+                    <div class="divider mb-4">
+                        <span class="divider-text">Nouveau sur HabitaGo ?</span>
+                    </div>
 
-                <!-- Bouton Créer un compte -->
-                <a href="{{ path('app_register') }}" class="btn btn-register w-100">
-                    <i class="bi bi-person-plus me-2"></i>
-                    Créer un compte
-                </a>
-            </form>
+                    <!-- Bouton Créer un compte -->
+                    <a href="{{ path('app_register') }}" class="btn btn-register w-100">
+                        Créer un compte
+                    </a>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+    /* ===== Variables et Base ===== */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --primary-color: #667eea;
+        --secondary-color: #764ba2;
+        --font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 0;
+    }
+
     /* ===== Layout Principal ===== */
-    .login-container {
-        display: flex;
+    .login-wrapper {
+        position: relative;
         min-height: 100vh;
         width: 100%;
-    }
-
-    /* ===== Colonne Gauche ===== */
-    .login-left {
-        flex: 1;
-        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; /* Met le panneau à droite */
         overflow: hidden;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
-    .login-left-bg {
-        position: relative;
-        width: 100%;
-        height: 100%;
+    /* ===== Arrière-plan global ===== */
+    .login-bg {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
         background: 
-            linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%),
-            url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaGF0LWltYWdlfHx8ZW58MHx8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            var(--primary-gradient),
+            url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background-blend-mode: multiply;
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        z-index: 1;
+        animation: scaleIn 20s infinite alternate linear;
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(1); }
+        to { transform: scale(1.05); }
+    }
+
+    /* ===== Conteneur principal ===== */
+    .login-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 600px; /* Largeur du panneau de droite */
+        min-height: 100vh;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 3rem;
     }
 
-    /* Logo */
-    .login-logo {
-        z-index: 10;
-    }
-
-    .login-logo h2 {
-        color: white;
-        font-size: 1.75rem;
-        margin: 0;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Texte d'accroche */
-    .login-tagline {
-        z-index: 10;
-        text-align: center;
-        animation: fadeInUp 0.8s ease-out;
-    }
-
-    .login-tagline h3 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .login-tagline p {
-        font-size: 1.1rem;
-        margin: 0;
-    }
-
-    /* ===== Colonne Droite ===== */
-    .login-right {
-        flex: 1;
-        background: #f8f9fb;
+    /* ===== Panneau en Verre (Glassmorphism) ===== */
+    .login-glass-panel {
+        width: 100%;
+        min-height: 100vh;
+        background: rgba(255, 255, 255, 0.15); /* Transparence pour voir l'image derrière */
+        backdrop-filter: blur(25px); /* Effet verre dépoli fort */
+        -webkit-backdrop-filter: blur(25px);
+        border-left: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 3rem;
+        padding: 3rem 4rem;
     }
 
     .login-form-wrapper {
         width: 100%;
         max-width: 420px;
+        animation: slideUpFade 0.8s ease-out forwards;
     }
 
-    /* En-tête du formulaire */
+    /* ===== Logo ===== */
+    .login-logo-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+        font-size: 2.2rem;
+        background: white;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .login-brand {
+        color: white;
+        font-size: 2rem;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    /* ===== Typographie et En-tête ===== */
     .login-header {
-        text-align: center;
+        text-align: left;
     }
 
     .login-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 700;
-        color: #1a202c;
+        color: #ffffff;
         margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
     }
 
     .login-subtitle {
-        font-size: 0.95rem;
-        color: #718096;
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.85);
         margin: 0;
+        font-weight: 400;
     }
 
-    /* Formulaire */
-    .login-form {
-        animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-
-    .form-group {
-        position: relative;
-    }
-
-    .form-label {
-        font-weight: 600;
-        color: #2d3748;
-        font-size: 0.9rem;
-        margin-bottom: 0.75rem;
-        display: block;
-    }
-
-    .form-control-lg {
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        padding: 0.85rem 1.2rem;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .form-control-lg:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        outline: none;
-    }
-
-    /* Password Input Wrapper */
-    .password-input-wrapper {
-        position: relative;
+    /* ===== Alertes Personnalisées ===== */
+    .custom-alert {
+        background: rgba(220, 53, 69, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(220, 53, 69, 0.5);
+        color: #fff;
+        border-radius: 12px;
         display: flex;
         align-items: center;
+        font-weight: 500;
     }
 
-    .password-input-wrapper .form-control-lg {
-        padding-right: 2.5rem;
+    /* ===== Inputs et Formulaire ===== */
+    .custom-form-floating label {
+        color: rgba(255, 255, 255, 0.7);
+        padding-left: 1.5rem;
     }
 
+    .premium-input {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 14px;
+        color: white !important;
+        padding-left: 1.5rem !important;
+        height: calc(3.5rem + 10px);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .premium-input::placeholder {
+        color: transparent !important;
+    }
+
+    .premium-input:focus {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Quand l'input est focus ou rempli, le label change de couleur */
+    .custom-form-floating > .form-control:focus ~ label,
+    .custom-form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: rgba(255, 255, 255, 0.95);
+        transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+    }
+    
+    /* Supprime le rectangle blanc de Bootstrap derrière les labels flottants */
+    .custom-form-floating > .form-control:focus ~ label::after,
+    .custom-form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+    .custom-form-floating > .form-control:-webkit-autofill ~ label::after {
+        background-color: transparent !important;
+    }
+
+    /* Chrome Autofill bg-color fix for beautiful glass inputs */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0) inset !important;
+        -webkit-text-fill-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* Bouton d'œil Mot de passe */
+    .password-wrapper {
+        position: relative;
+    }
+    
     .password-toggle {
         position: absolute;
         right: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
         background: none;
         border: none;
-        color: #718096;
+        color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         padding: 0.5rem;
         transition: color 0.3s ease;
+        z-index: 10;
     }
 
     .password-toggle:hover {
-        color: #667eea;
+        color: white;
     }
 
-    /* Checkbox et liens */
-    .form-check-input {
-        border-radius: 4px;
-        border: 1px solid #cbd5e0;
-        width: 1.1em;
-        height: 1.1em;
-        margin-top: 0.25em;
-        cursor: pointer;
-        transition: all 0.3s ease;
+    .password-toggle:focus {
+        outline: none;
     }
 
-    .form-check-input:checked {
-        background-color: #667eea;
-        border-color: #667eea;
-    }
-
-    .form-check-label {
-        color: #4a5568;
-        font-size: 0.9rem;
-        cursor: pointer;
-        margin-bottom: 0;
-    }
-
+    /* Liens */
     .forgot-password-link {
-        color: #667eea;
-        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
         text-decoration: none;
         font-weight: 500;
-        transition: color 0.3s ease;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .forgot-password-link::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1px;
+        bottom: 0;
+        left: 0;
+        background-color: white;
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
     }
 
     .forgot-password-link:hover {
-        color: #764ba2;
-        text-decoration: underline;
-    }
-
-    /* Boutons */
-    .btn-login,
-    .btn-register {
-        border-radius: 10px;
-        padding: 0.85rem 1.5rem;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: none;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .btn-login {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .forgot-password-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+    /* ===== Boutons ===== */
+    .btn-login {
+        background: white;
+        color: var(--primary-color);
+        border: none;
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
     .btn-login:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        color: white;
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+        color: var(--secondary-color);
     }
 
-    .btn-login:active {
-        transform: translateY(0);
+    .btn-login .icon-right {
+        transition: transform 0.3s ease;
+    }
+    .btn-login:hover .icon-right {
+        transform: translateX(5px);
     }
 
     .btn-register {
-        background: white;
-        color: #667eea;
-        border: 2px solid #e2e8f0;
+        background: transparent;
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
     }
 
     .btn-register:hover {
-        background: #f7fafc;
-        border-color: #667eea;
-        color: #764ba2;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+        color: white;
     }
 
-    /* Divider */
+    /* ===== Divider ===== */
     .divider {
         display: flex;
         align-items: center;
-        color: #cbd5e0;
+        color: rgba(255, 255, 255, 0.5);
     }
 
     .divider::before,
@@ -349,39 +405,21 @@
         content: '';
         flex: 1;
         height: 1px;
-        background: #e2e8f0;
+        background: rgba(255, 255, 255, 0.2);
     }
 
     .divider-text {
         padding: 0 1rem;
-        color: #a0aec0;
-        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
         font-weight: 500;
     }
 
-    /* Alertes */
-    .alert {
-        border-radius: 10px;
-        border: none;
-        background-color: #fed7d7;
-        color: #c53030;
-    }
-
-    .alert-danger {
-        background-color: #fed7d7;
-        color: #c53030;
-    }
-
-    .alert-success {
-        background-color: #c6f6d5;
-        color: #22543d;
-    }
-
     /* ===== Animations ===== */
-    @keyframes fadeInUp {
+    @keyframes slideUpFade {
         from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
         }
         to {
             opacity: 1;
@@ -391,77 +429,38 @@
 
     /* ===== Responsive Design ===== */
     @media (max-width: 992px) {
+        .login-wrapper {
+            justify-content: center;
+        }
+
         .login-container {
-            flex-direction: column;
+            max-width: 100%;
         }
 
-        .login-left {
-            min-height: 250px;
-        }
-
-        .login-left-bg {
-            padding: 2rem;
-        }
-
-        .login-tagline h3 {
-            font-size: 1.5rem;
-        }
-
-        .login-right {
-            padding: 2rem;
-        }
-
-        .login-title {
-            font-size: 1.75rem;
+        .login-glass-panel {
+            padding: 3rem 2rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.1);
         }
     }
 
     @media (max-width: 576px) {
-        .login-left {
-            min-height: 150px;
-        }
-
-        .login-left-bg {
-            padding: 1.5rem;
-        }
-
-        .login-logo h2 {
-            font-size: 1.5rem;
-        }
-
-        .login-tagline h3 {
-            font-size: 1.2rem;
-        }
-
-        .login-tagline p {
-            font-size: 0.9rem;
-        }
-
-        .login-right {
-            padding: 1.5rem;
-        }
-
-        .login-form-wrapper {
-            max-width: 100%;
+        .login-glass-panel {
+            padding: 2rem 1.5rem;
         }
 
         .login-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
         }
 
         .login-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
         }
 
-        .form-control-lg {
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .btn-login,
-        .btn-register {
-            padding: 0.75rem 1.2rem;
-            font-size: 0.9rem;
+        .btn-login, .btn-register {
+            padding: 0.85rem;
+            font-size: 0.95rem;
         }
     }
 </style>
@@ -492,3 +491,4 @@
     });
 </script>
 {% endblock %}
+

@@ -11,7 +11,11 @@ use App\Repository\ContratRepository;
 class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(ConsommationRepository $consommationRepo, ContratRepository $contratRepo): Response
+    public function index(
+        ConsommationRepository $consommationRepo, 
+        ContratRepository $contratRepo,
+        \App\Service\PaiementMetierService $paiementMetier
+    ): Response
     {
         $user = $this->getUser();
 
@@ -28,6 +32,9 @@ class DashboardController extends AbstractController
             // Récupérer les totaux réels de consommation
             $totauxConsommation = $consommationRepo->getTotauxByLogement($contrat->getLogement());
         }
+
+        // Récupérer les statistiques de paiement liées
+        $paymentStats = $paiementMetier->getStatsForUser($user);
         $logement = null;
 
 if ($contrat) {
@@ -39,6 +46,7 @@ if ($contrat) {
     'totauxConsommation' => $totauxConsommation,
     'contrat' => $contrat,
     'logement' => $logement,
+    'paymentStats' => $paymentStats,
 ]);
 
         

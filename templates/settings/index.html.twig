@@ -1,336 +1,444 @@
 {% extends 'base.html.twig' %}
-{% block title %}Paramètres du compte - HabitaGo{% endblock %}
+
+{% block title %}Paramètres - HabitaGo{% endblock %}
+
 {% block body %}
 <style>
-    /* Settings page animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
     }
 
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .animate-slide-in {
+        animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    /* Settings container */
-    .settings-container {
-        background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-        min-height: 100vh;
-        padding: 3rem 0;
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
     }
 
-    /* Settings header */
-    .settings-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 2.5rem 2rem;
-        border-radius: 15px;
-        margin-bottom: 3rem;
-        animation: fadeInUp 0.6s ease-out;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25);
-    }
+    .page-header { margin-bottom: 2.5rem; }
+    .page-title { font-weight: 800; font-size: 1.5rem; color: #1e293b; margin-bottom: 0.5rem; }
 
-    .settings-header h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .settings-header p {
-        font-size: 1rem;
-        opacity: 0.95;
-        margin: 0;
-    }
-
-    /* Card modern */
-    .card-modern {
-        border: none;
-        background: white;
+    .settings-nav { display: flex; flex-direction: column; gap: 0.5rem; }
+    .settings-nav-item {
+        padding: 1rem 1.25rem;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .card-modern:hover {
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-        transform: translateY(-8px);
-    }
-
-    .card-modern .card-body {
-        padding: 2rem;
-    }
-
-    /* Sidebar navigation */
-    .sidebar-modern {
-        animation: slideInLeft 0.8s ease-out;
-    }
-
-    .list-group-modern {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .list-group-item-modern {
-        background: white;
-        border: 2px solid #f0f3f7;
-        border-radius: 10px;
-        padding: 1rem 1.2rem;
-        color: #666 !important;
-        font-weight: 500;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: #64748b;
+        font-weight: 700;
         text-decoration: none;
         display: flex;
         align-items: center;
-        gap: 0.8rem;
-        cursor: pointer;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+    .settings-nav-item:hover { background: rgba(102, 126, 234, 0.05); color: #667eea; }
+    .settings-nav-item.active { background: white; color: #667eea; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: rgba(102, 126, 234, 0.1); }
+
+    /* Visual Card Premium */
+    .visual-card {
+        height: 200px;
+        border-radius: 18px;
+        padding: 25px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     }
 
-    .list-group-item-modern:hover {
-        border-color: #667eea;
-        background: rgba(102, 126, 234, 0.03);
-        color: #667eea !important;
-        transform: translateX(4px);
+    .card-chip {
+        width: 45px;
+        height: 35px;
+        background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+        border-radius: 6px;
+        margin-bottom: 20px;
     }
 
-    .list-group-item-modern.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
-        border-color: transparent;
-    }
-
-    /* Section title */
-    .profile-section-title {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #333;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f0f3f7;
-        margin-bottom: 1.5rem !important;
-    }
-
-    .profile-section-title i {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .card-number-display {
+        font-family: 'Courier New', Courier, monospace;
         font-size: 1.4rem;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    /* Form styling */
-    .form-label {
-        color: #666;
-        font-weight: 600;
-        font-size: 0.9rem;
+    .card-label {
+        font-size: 0.6rem;
         text-transform: uppercase;
+        opacity: 0.7;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .card-value {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .card-logo {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        font-size: 1.8rem;
+        font-style: italic;
+        font-weight: 900;
+        opacity: 0.9;
+    }
+
+    /* Form Styles */
+    .form-glass-control {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+    }
+
+    .form-label-premium {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         margin-bottom: 0.5rem;
     }
 
-    .form-control {
-        border: 2px solid #f0f3f7;
-        border-radius: 8px;
-        padding: 0.8rem 1rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .form-control:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        background: white;
-    }
-
-    .form-control:disabled {
-        background: #f9f9f9;
-        color: #999;
-    }
-
-    /* Alert danger */
-    .alert-danger-modern {
-        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(253, 126, 20, 0.05));
-        border: 2px solid #dc3545;
-        border-radius: 10px;
-        padding: 1.5rem;
-        color: #dc3545;
-    }
-
-    .alert-danger-modern i {
-        color: #dc3545;
-        font-size: 1.2rem;
-    }
-
-    .alert-danger-modern strong {
-        font-weight: 600;
-    }
-
-    /* Buttons */
-    .btn-modern {
+    .btn-premium {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white !important;
+        color: white;
         border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        padding: 1rem;
+        font-weight: 800;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     }
 
-    .btn-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-modern:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    .btn-danger-modern {
-        background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
-        color: white !important;
-    }
-
-    .btn-danger-modern:hover {
-        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
-    }
-
-    /* Responsive */
-    @media (max-width: 991px) {
-        .sidebar-modern {
-            margin-bottom: 2rem;
-        }
-    }
-
-    /* Delays */
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
+    /* Card Themes */
+    .theme-visa { background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%); }
+    .theme-mastercard { background: linear-gradient(135deg, #eb001b 0%, #ff5f00 100%); }
+    .theme-amex { background: linear-gradient(135deg, #007bc1 0%, #00a3e0 100%); }
 </style>
 
-<div class="settings-container">
-    <div class="container-lg">
-        {# En-tête #}
-        <div class="settings-header">
-            <h1>
-                <i class="bi bi-gear"></i>Paramètres du compte
-            </h1>
-            <p>Gérez vos informations personnelles et votre sécurité</p>
+<div class="container-fluid py-4">
+    <header class="page-header px-2 animate-slide-in">
+        <h1 class="page-title">Paramètres</h1>
+        <p class="text-muted fw-bold">Gérez votre profil, vos paiements et votre sécurité.</p>
+    </header>
+
+    <div class="row g-4">
+        {# Sidebar #}
+        <div class="col-lg-3 animate-slide-in" style="animation-delay: 0.1s;">
+            <div class="glass-card p-3 shadow-sm border-0">
+                <nav class="settings-nav">
+                    <a href="#general" class="settings-nav-item active">
+                        <i class="bi bi-person-circle fs-5"></i> Profil & Compte
+                    </a>
+                    <a href="#payments" class="settings-nav-item">
+                        <i class="bi bi-credit-card-2-front fs-5"></i> Moyens de Paiement
+                    </a>
+                    <a href="#notifications" class="settings-nav-item">
+                        <i class="bi bi-bell fs-5"></i> Notifications
+                    </a>
+                    <a href="#security" class="settings-nav-item">
+                        <i class="bi bi-shield-lock-fill fs-5"></i> Sécurité
+                    </a>
+                </nav>
+            </div>
         </div>
 
-        <div class="row g-4">
-            {# Sidebar navigation #}
-            <div class="col-lg-3">
-                <div class="sidebar-modern list-group-modern sticky-lg-top" style="top: 120px;">
-                    <a href="#infos" class="list-group-item-modern active" data-bs-toggle="list">
-                        <i class="bi bi-person"></i>Informations personnelles
-                    </a>
+        {# Main Content #}
+        <div class="col-lg-9">
+            {# General Section #}
+            <div id="general" class="tab-content animate-slide-in" style="animation-delay: 0.2s;">
+                <div class="glass-card p-4 mb-4 border-0">
+                    <h2 class="section-title mb-4 fs-4 fw-800"><i class="bi bi-person-fill text-primary me-2"></i> Informations personnelles</h2>
+                    <form method="POST" action="{{ path('settings_update_profile') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label-premium">Prénom</label>
+                                <input type="text" name="prenom" class="form-control form-glass-control" value="{{ user.prenom }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-premium">Nom</label>
+                                <input type="text" name="nom" class="form-control form-glass-control" value="{{ user.nom }}" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-premium">Adresse E-mail</label>
+                                <input type="email" name="email" class="form-control form-glass-control" value="{{ user.email }}" required>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Mettre à jour</button>
+                        </div>
+                    </form>
+                </div>
 
-                    <a href="#delete" class="list-group-item-modern" data-bs-toggle="list">
-                        <i class="bi bi-trash"></i>Suppression du compte
-                    </a>
+                {# Danger Zone inside General #}
+                <div class="glass-card p-4 border-0" style="background: rgba(239, 68, 68, 0.05);">
+                    <h3 class="section-title text-danger mb-4 fs-5 fw-800">Zone de danger</h3>
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded-4 bg-white border border-danger-subtle shadow-sm">
+                        <div class="fw-800 text-dark">Supprimer mon compte</div>
+                        <form method="POST" action="{{ path('settings_delete_account') }}" onsubmit="return confirm('Êtes-vous sûr ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_account') }}">
+                            <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Supprimer</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-        {# Contenu principal #}
-        <div class="col-lg-9">
-            {# INFORMATIONS PERSONNELLES #}
-            <div id="infos" class="card-modern delay-2">
-                <div class="card-body">
-                    <h5 class="profile-section-title">
-                        <i class="bi bi-person"></i>Informations personnelles
-                    </h5>
+            {# Payments Section #}
+            <div id="payments" class="tab-content d-none">
+                <div class="glass-card p-4 mb-4 border-0">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title mb-0 fs-4 fw-800"><i class="bi bi-credit-card-fill text-primary me-2"></i> Mes cartes</h2>
+                        <button class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" id="btn-add-card">
+                            <i class="bi bi-plus-lg me-1"></i> Ajouter une carte
+                        </button>
+                    </div>
 
-                    <form method="POST" action="{{ path('settings_update_profile') }}">
+                    <div class="row g-3">
+                        {% for card in cards %}
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-4 bg-white shadow-sm border d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-light p-3 rounded-3">
+                                            {% if card.type|lower == 'visa' %}
+                                                <i class="bi bi-credit-card-2-front text-primary fs-3"></i>
+                                            {% elseif card.type|lower == 'mastercard' %}
+                                                <i class="bi bi-credit-card-fill text-danger fs-3"></i>
+                                            {% else %}
+                                                <i class="bi bi-credit-card text-dark fs-3"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div class="fw-800 text-dark">{{ card.type }} •••• {{ card.dernierQuatre }}</div>
+                                            <div class="text-muted small fw-bold">Expire le {{ card.dateExpiration }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-link text-primary p-0 border-0 btn-edit-card" 
+                                                data-id="{{ card.id }}" 
+                                                data-titulaire="{{ card.titulaire }}" 
+                                                data-type="{{ card.type }}" 
+                                                data-expiration="{{ card.dateExpiration }}"
+                                                data-last4="{{ card.dernierQuatre }}">
+                                            <i class="bi bi-pencil-square fs-5"></i>
+                                        </button>
+                                        <form method="POST" action="{{ path('settings_delete_card', {id: card.id}) }}" onsubmit="return confirm('Supprimer cette carte ?');">
+                                            <button class="btn btn-link text-danger p-0 border-0"><i class="bi bi-trash3-fill fs-5"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-12 text-center py-5">
+                                <div class="text-muted mb-3"><i class="bi bi-credit-card fs-1 opacity-25"></i></div>
+                                <p class="fw-bold text-muted">Aucune carte enregistrée.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            {# Security Section #}
+            <div id="security" class="tab-content d-none">
+                <div class="glass-card p-4 mb-4 border-0">
+                    <h2 class="section-title mb-4 fs-4 fw-800"><i class="bi bi-shield-lock-fill text-primary me-2"></i> Sécurité</h2>
+                    <form method="POST" action="{{ path('settings_update_password') }}">
+                        <div class="mb-3">
+                            <label class="form-label-premium">Mot de passe actuel</label>
+                            <input type="password" name="current_password" class="form-control form-glass-control" required>
+                        </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label for="firstName" class="form-label">Prénom</label>
-                                <input type="text" class="form-control" id="firstName" name="prenom" value="{{ user.prenom }}" required>
+                                <label class="form-label-premium">Nouveau mot de passe</label>
+                                <input type="password" name="new_password" class="form-control form-glass-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="lastName" class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="lastName" name="nom" value="{{ user.nom }}" required>
+                                <label class="form-label-premium">Confirmer</label>
+                                <input type="password" name="confirm_password" class="form-control form-glass-control" required>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Adresse e-mail</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="dateCreation" class="form-label">Membre depuis</label>
-                            <input type="text" class="form-control" id="dateCreation" value="{{ user.dateCreation|date('d/m/Y') }}" disabled>
-                        </div>
-
-                        <button type="submit" class="btn btn-modern">
-                            <i class="bi bi-pencil-square me-2"></i>Modifier mes informations
-                        </button>
+                        <button type="submit" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Changer le mot de passe</button>
                     </form>
                 </div>
             </div>
 
-            {# SUPPRESSION DU COMPTE #}
-            <div id="delete" class="card-modern delay-3" style="margin-top: 2rem;">
-                <div class="card-body">
-                    <h5 class="profile-section-title">
-                        <i class="bi bi-trash"></i>Suppression du compte
-                    </h5>
-
-                    <h6 style="font-weight: 700; color: #dc3545; margin-bottom: 1.5rem; font-size: 1rem;">⚠️ Zone de danger</h6>
-
-                    <div class="alert-danger-modern small mb-3">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <strong>Attention :</strong> Cette action est irréversible. Toutes vos données seront supprimées.
-                    </div>
-
-                    <p style="color: #666; margin-bottom: 2rem; font-size: 0.95rem;">
-                        En supprimant votre compte, vous perdrez l'accès à tous vos services et données.
-                    </p>
-
-                 <form method="POST"
-      action="{{ path('settings_delete_account') }}"
-      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.');">
-
-    <input type="hidden" name="_token" value="{{ csrf_token('delete_account') }}">
-
-    <button type="submit" class="btn btn-danger-modern">
-        <i class="bi bi-trash me-2"></i>
-        Supprimer définitivement mon compte
-    </button>
-</form>
-
+            {# Notifications Section #}
+            <div id="notifications" class="tab-content d-none">
+                <div class="glass-card p-5 mb-4 border-0 text-center">
+                    <i class="bi bi-bell-slash fs-1 text-muted opacity-25"></i>
+                    <p class="mt-3 fw-bold text-muted">Bientôt disponible !</p>
+                    <p class="text-muted small">Vous pourrez bientôt configurer vos alertes mail et SMS ici.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+{# Modal Ajouter/Modifier Carte #}
+<div class="modal fade" id="cardModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-5 shadow-2xl overflow-hidden glass-card">
+            <div class="modal-header border-0 p-4 pb-2">
+                <h5 class="modal-title fw-900 text-dark" id="modal-title">Nouveau Moyen de Paiement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pt-0">
+                <div class="card-container mb-4 px-2">
+                    <div id="visual-card" class="visual-card">
+                        <div id="v-logo" class="card-logo">VISA</div>
+                        <div class="card-chip"></div>
+                        <div id="v-number" class="card-number-display">•••• •••• •••• ••••</div>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div style="flex: 1;">
+                                <div class="card-label">Titulaire</div>
+                                <div id="v-name" class="card-value">Nom Prénom</div>
+                            </div>
+                            <div style="width: 80px; text-align: right;">
+                                <div class="card-label">Expire</div>
+                                <div id="v-expiry" class="card-value">MM/YY</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ path('settings_add_card') }}" id="cardForm">
+                    <div class="mb-3">
+                        <label class="form-label-premium">Numéro de carte</label>
+                        <input type="text" name="numero" id="i-number" class="form-control form-glass-control" placeholder="0000 0000 0000 0000" maxlength="19" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-premium">Nom du titulaire</label>
+                        <input type="text" name="titulaire" id="i-name" class="form-control form-glass-control" placeholder="Jean Dupont" required>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-7">
+                            <label class="form-label-premium">Expiration</label>
+                            <input type="text" name="expiration" id="i-expiry" class="form-control form-glass-control" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label-premium">CVV</label>
+                            <input type="text" name="cvv" id="i-cvv" class="form-control form-glass-control" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+                    <input type="hidden" name="type" id="i-type" value="Visa">
+                    <button type="submit" id="btn-submit-card" class="btn btn-premium w-100 mt-4 shadow-lg">Enregistrer la carte</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Gestion simple des onglets
-    document.querySelectorAll('.list-group-item').forEach(item => {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.list-group-item').forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tabs logic with slide effect
+        document.querySelectorAll('.settings-nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href').substring(1);
+                
+                // Update nav items
+                document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Show/Hide sections with animation
+                document.querySelectorAll('.tab-content').forEach(el => {
+                    if (el.id === targetId) {
+                        el.classList.remove('d-none');
+                        el.classList.remove('animate-slide-in');
+                        void el.offsetWidth; // Trigger reflow
+                        el.classList.add('animate-slide-in');
+                    } else {
+                        el.classList.add('d-none');
+                    }
+                });
+            });
+        });
+
+        const cardModal = new bootstrap.Modal(document.getElementById('cardModal'));
+        const cardForm = document.getElementById('cardForm');
+        const modalTitle = document.getElementById('modal-title');
+        const btnSubmit = document.getElementById('btn-submit-card');
+
+        // Inputs
+        const iNumber = document.getElementById('i-number');
+        const iName = document.getElementById('i-name');
+        const iExpiry = document.getElementById('i-expiry');
+        const iType = document.getElementById('i-type');
+        
+        // Visuals
+        const vNumber = document.getElementById('v-number');
+        const vName = document.getElementById('v-name');
+        const vExpiry = document.getElementById('v-expiry');
+        const vLogo = document.getElementById('v-logo');
+        const vCard = document.getElementById('visual-card');
+
+        function updateVisualCard(num, name, exp) {
+            vNumber.textContent = num || '•••• •••• •••• ••••';
+            vName.textContent = name.toUpperCase() || 'Nom Prénom';
+            vExpiry.textContent = exp || 'MM/YY';
+            
+            const rawNum = num.replace(/\D/g, '');
+            let type = 'CB';
+            let theme = '';
+            if (rawNum.startsWith('4')) { type = 'VISA'; theme = 'theme-visa'; }
+            else if (/^(5[1-5]|2[2-7])/.test(rawNum)) { type = 'MASTERCARD'; theme = 'theme-mastercard'; }
+            else if (/^3[47]/.test(rawNum)) { type = 'AMEX'; theme = 'theme-amex'; }
+            
+            vLogo.textContent = type;
+            vCard.className = 'visual-card ' + theme;
+            iType.value = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+        }
+
+        // Add Click
+        document.getElementById('btn-add-card').addEventListener('click', () => {
+            modalTitle.textContent = 'Nouveau Moyen de Paiement';
+            btnSubmit.textContent = 'Enregistrer la carte';
+            cardForm.action = "{{ path('settings_add_card') }}";
+            cardForm.reset();
+            updateVisualCard('', '', '');
+            cardModal.show();
+        });
+
+        // Edit Click
+        document.querySelectorAll('.btn-edit-card').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                modalTitle.textContent = 'Modifier la carte';
+                btnSubmit.textContent = 'Mettre à jour';
+                cardForm.action = `/settings/cards/${id}/edit`;
+                
+                iName.value = btn.dataset.titulaire;
+                iExpiry.value = btn.dataset.expiration;
+                iNumber.value = `•••• •••• •••• ${btn.dataset.last4}`;
+                iNumber.required = false; 
+                
+                updateVisualCard(iNumber.value, iName.value, iExpiry.value);
+                cardModal.show();
+            });
+        });
+
+        iNumber.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            e.target.value = val.replace(/(.{4})/g, '$1 ').trim();
+            updateVisualCard(e.target.value, iName.value, iExpiry.value);
+        });
+
+        iName.addEventListener('input', () => updateVisualCard(iNumber.value, iName.value, iExpiry.value));
+        iExpiry.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 2) val = val.substring(0,2) + '/' + val.substring(2,4);
+            e.target.value = val;
+            updateVisualCard(iNumber.value, iName.value, val);
         });
     });
 </script>

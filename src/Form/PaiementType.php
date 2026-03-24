@@ -14,15 +14,9 @@ class PaiementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('datePaiement')
-            ->add('moyenPaiement')
-            ->add('statut')
-            ->add('dateCreation')
-            ->add('periode')
-            ->add('montant')
-            ->add('contrat', EntityType::class, [
-                'class' => Contrat::class,
-                'choice_label' => 'id',
+            ->add('moyenPaiement', null, [
+                'label' => 'Moyen de paiement',
+                'attr' => ['class' => 'form-select form-glass-control']
             ])
         ;
     }

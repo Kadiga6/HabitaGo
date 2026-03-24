@@ -3,127 +3,122 @@
 {% block title %}Inscription - HabitaGo{% endblock %}
 
 {% block body %}
-<div class="register-container">
-    <!-- Colonne gauche : Image + Overlay -->
-    <div class="register-left">
-        <div class="register-left-bg">
-            <!-- Logo HabitaGo -->
-            <div class="register-logo">
-                <h2 class="fw-bold">🏠 HabitaGo</h2>
-            </div>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-            <!-- Texte d'accroche -->
-            <div class="register-tagline">
-                <h3 class="text-white fw-bold">Rejoignez-nous</h3>
-                <p class="text-white-50">Gérez vos logements simplement</p>
-            </div>
-        </div>
-    </div>
+<div class="register-wrapper">
+    <!-- Image et Gradient en arrière-plan global -->
+    <div class="register-bg"></div>
 
-    <!-- Colonne droite : Formulaire -->
-    <div class="register-right">
-        <div class="register-form-wrapper">
-            <!-- En-tête du formulaire -->
-            <div class="register-header mb-4">
-                <h1 class="register-title">Créer un compte</h1>
-                <p class="register-subtitle">Rejoignez-nous et gérez vos logements</p>
-            </div>
-
-            {% set classes = {
-    success: 'success',
-    error: 'danger',
-    warning: 'warning',
-    info: 'info'
-} %}
-
-
-            <!-- Messages de succès -->
-         {% for type, messages in app.flashes %}
-    {% for message in messages %}
-        <div class="alert alert-{{ classes[type]|default('secondary') }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endfor %}
-
-
-            <!-- Formulaire d'inscription -->
-            <form method="post" action="{{ path('app_register') }}" class="register-form">
-                <!-- Prénom et Nom -->
-                <div class="row">
-                 <div class="col-md-6">
-    <div class="form-group mb-3">
-        <label for="prenom" class="form-label">Prénom</label>
-        <input
-            type="text"
-            id="prenom"
-            name="prenom"
-            class="form-control form-control-lg {% if errors.prenom is not null %}is-invalid{% endif %}"
-            value="{{ prenom|default('') }}"
-            placeholder="Jean"
-        />
-        {% if errors.prenom is not null %}
-            <div class="invalid-feedback d-block">
-                {{ errors.prenom }}
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-
-
-                   <div class="col-md-6">
-    <div class="form-group mb-3">
-        <label for="nom" class="form-label">Nom</label>
-        <input
-            type="text"
-            id="nom"
-            name="nom"
-            class="form-control form-control-lg {% if errors.nom is not null %}is-invalid{% endif %}"
-            value="{{ nom|default('') }}"
-            placeholder="Dupont"
-        />
-        {% if errors.nom is not null %}
-            <div class="invalid-feedback d-block">
-                {{ errors.nom }}
-            </div>
-        {% endif %}
-    </div>
-</div>
-
+    <div class="register-container">
+        <!-- Colonne droite : Formulaire en Glassmorphism -->
+        <div class="register-glass-panel">
+            <div class="register-form-wrapper">
+                
+                <!-- Logo -->
+                <div class="text-center mb-4 login-logo-container">
+                    <div class="logo-icon">🏠</div>
+                    <h2 class="fw-bold m-0 login-brand">HabitaGo</h2>
                 </div>
 
-                <!-- Email -->
-                <div class="form-group mb-3">
-                    <label for="email" class="form-label">Adresse email</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        class="form-control form-control-lg {% if errors is defined and errors.email %}is-invalid{% endif %}" 
-                        value="{{ email|default('') }}"
-                        required
-                        placeholder="vous@email.com"
-                    />
-                    {% if errors is defined and errors.email %}
-                        <div class="invalid-feedback d-block">
-                            {{ errors.email }}
+                <!-- En-tête du formulaire -->
+                <div class="register-header mb-4">
+                    <h1 class="register-title">Créer un compte</h1>
+                    <p class="register-subtitle">Rejoignez-nous et gérez vos logements simplement.</p>
+                </div>
+
+                <!-- Messages Flash -->
+                {% set classes = {
+                    success: 'success',
+                    error: 'danger',
+                    warning: 'warning',
+                    info: 'info'
+                } %}
+                
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ classes[type]|default('secondary') }} custom-alert-flash">
+                            {{ message }}
                         </div>
-                    {% endif %}
-                </div>
+                    {% endfor %}
+                {% endfor %}
 
-                <!-- Mot de passe -->
-                <div class="form-group mb-3">
-                    <label for="motDePasse" class="form-label">Mot de passe</label>
-                    <div class="password-input-wrapper">
+                <!-- Formulaire d'inscription -->
+                <form method="post" action="{{ path('app_register') }}" class="register-form">
+                    
+                    <div class="row">
+                        <!-- Prénom -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 custom-form-floating">
+                                <input
+                                    type="text"
+                                    id="prenom"
+                                    name="prenom"
+                                    class="form-control premium-input {% if errors is defined and errors.prenom is not null %}is-invalid{% endif %}"
+                                    value="{{ prenom|default('') }}"
+                                    placeholder="Jean"
+                                    required
+                                />
+                                <label for="prenom">Prénom</label>
+                                {% if errors is defined and errors.prenom is not null %}
+                                    <div class="invalid-feedback d-block custom-invalid-feedback">
+                                        {{ errors.prenom }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Nom -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 custom-form-floating">
+                                <input
+                                    type="text"
+                                    id="nom"
+                                    name="nom"
+                                    class="form-control premium-input {% if errors is defined and errors.nom is not null %}is-invalid{% endif %}"
+                                    value="{{ nom|default('') }}"
+                                    placeholder="Dupont"
+                                    required
+                                />
+                                <label for="nom">Nom</label>
+                                {% if errors is defined and errors.nom is not null %}
+                                    <div class="invalid-feedback d-block custom-invalid-feedback">
+                                        {{ errors.nom }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3 custom-form-floating">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-control premium-input {% if errors is defined and errors.email is not null %}is-invalid{% endif %}" 
+                            value="{{ email|default('') }}"
+                            required
+                            placeholder="vous@email.com"
+                        />
+                        <label for="email">Adresse email</label>
+                        {% if errors is defined and errors.email is not null %}
+                            <div class="invalid-feedback d-block custom-invalid-feedback">
+                                {{ errors.email }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Mot de passe -->
+                    <div class="form-floating mb-3 custom-form-floating password-wrapper">
                         <input 
                             type="password" 
                             id="motDePasse" 
                             name="motDePasse" 
-                            class="form-control form-control-lg {% if errors is defined and errors.motDePasse %}is-invalid{% endif %}" 
+                            class="form-control premium-input {% if errors is defined and errors.motDePasse is not null %}is-invalid{% endif %}" 
                             required
                             placeholder="Au moins 6 caractères"
                         />
+                        <label for="motDePasse">Mot de passe</label>
                         <button 
                             type="button" 
                             class="password-toggle" 
@@ -132,30 +127,28 @@
                         >
                             <i class="bi bi-eye"></i>
                         </button>
+                        {% if errors is defined and errors.motDePasse is not null %}
+                            <div class="invalid-feedback d-block custom-invalid-feedback">
+                                {{ errors.motDePasse }}
+                            </div>
+                        {% else %}
+                            <small class="text-white-50 d-block mt-1 helper-text">
+                                <i class="bi bi-info-circle"></i> Minimum 6 caractères
+                            </small>
+                        {% endif %}
                     </div>
-                    {% if errors is defined and errors.motDePasse %}
-                        <div class="invalid-feedback d-block">
-                            {{ errors.motDePasse }}
-                        </div>
-                    {% endif %}
-                    <small class="text-muted d-block mt-1">
-                        <i class="bi bi-info-circle"></i>
-                        Minimum 6 caractères
-                    </small>
-                </div>
 
-                <!-- Confirmer le mot de passe -->
-                <div class="form-group mb-4">
-                    <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
-                    <div class="password-input-wrapper">
+                    <!-- Confirmer le mot de passe -->
+                    <div class="form-floating mb-4 custom-form-floating password-wrapper">
                         <input 
                             type="password" 
                             id="confirmPassword" 
                             name="confirmPassword" 
-                            class="form-control form-control-lg {% if errors is defined and errors.confirmPassword %}is-invalid{% endif %}" 
+                            class="form-control premium-input {% if errors is defined and errors.confirmPassword is not null %}is-invalid{% endif %}" 
                             required
                             placeholder="Confirmez votre mot de passe"
                         />
+                        <label for="confirmPassword">Confirmer le mot de passe</label>
                         <button 
                             type="button" 
                             class="password-toggle" 
@@ -164,256 +157,337 @@
                         >
                             <i class="bi bi-eye"></i>
                         </button>
+                        {% if errors is defined and errors.confirmPassword is not null %}
+                            <div class="invalid-feedback d-block custom-invalid-feedback">
+                                {{ errors.confirmPassword }}
+                            </div>
+                        {% endif %}
                     </div>
-                    {% if errors is defined and errors.confirmPassword %}
-                        <div class="invalid-feedback d-block">
-                            {{ errors.confirmPassword }}
-                        </div>
-                    {% endif %}
-                </div>
 
-                <!-- Bouton d'inscription -->
-                <button type="submit" class="btn btn-register-submit w-100 mb-4">
-                    <i class="bi bi-person-plus-fill me-2"></i>
-                    S'inscrire
-                </button>
+                    <!-- Bouton d'inscription -->
+                    <button type="submit" class="btn btn-register-submit w-100 mb-4">
+                        <span>S'inscrire</span>
+                        <i class="bi bi-person-plus-fill icon-right ms-2"></i>
+                    </button>
 
-                <!-- Divider -->
-                <div class="divider mb-4">
-                    <span class="divider-text">Vous avez déjà un compte?</span>
-                </div>
+                    <!-- Divider -->
+                    <div class="divider mb-4">
+                        <span class="divider-text">Vous avez déjà un compte ?</span>
+                    </div>
 
-                <!-- Lien Connexion -->
-                <a href="{{ path('app_login') }}" class="btn btn-register-login w-100">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                    Se connecter
-                </a>
-            </form>
+                    <!-- Lien Connexion -->
+                    <a href="{{ path('app_login') }}" class="btn btn-login-link w-100 mb-4">
+                        Se connecter
+                    </a>
+                </form>
 
-            <!-- Texte sécurité -->
-            <p class="text-center text-muted small mt-4">
-                <i class="bi bi-shield-lock"></i>
-                Vos données sont sécurisées et chiffrées
-            </p>
+                <!-- Texte sécurité -->
+                <p class="text-center security-text mt-3 mb-0">
+                    <i class="bi bi-shield-lock"></i>
+                    Vos données sont sécurisées et chiffrées
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+    /* ===== Variables et Base ===== */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --primary-color: #667eea;
+        --secondary-color: #764ba2;
+        --font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 0;
+    }
+
     /* ===== Layout Principal ===== */
-    .register-container {
-        display: flex;
+    .register-wrapper {
+        position: relative;
         min-height: 100vh;
         width: 100%;
-    }
-
-    /* ===== Colonne Gauche ===== */
-    .register-left {
-        flex: 1;
-        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; /* Met le panneau à droite */
         overflow: hidden;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
-    .register-left-bg {
-        position: relative;
-        width: 100%;
-        height: 100%;
+    /* ===== Arrière-plan global ===== */
+    .register-bg {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
         background: 
-            linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%),
-            url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaGF0LWltYWdlfHx8ZW58MHx8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            var(--primary-gradient),
+            url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+        background-blend-mode: multiply;
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        z-index: 1;
+        animation: scaleIn 20s infinite alternate linear;
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(1); }
+        to { transform: scale(1.05); }
+    }
+
+    /* ===== Conteneur principal ===== */
+    .register-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 650px; /* Un poil plus large pour les 2 colonnes Nom/Prénom */
+        min-height: 100vh;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 3rem;
     }
 
-    /* Logo */
-    .register-logo {
-        z-index: 10;
-    }
-
-    .register-logo h2 {
-        color: white;
-        font-size: 1.75rem;
-        margin: 0;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Texte d'accroche */
-    .register-tagline {
-        z-index: 10;
-        text-align: center;
-        animation: fadeInUp 0.8s ease-out;
-    }
-
-    .register-tagline h3 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .register-tagline p {
-        font-size: 1.1rem;
-        margin: 0;
-    }
-
-    /* ===== Colonne Droite ===== */
-    .register-right {
-        flex: 1;
-        background: #f8f9fb;
+    /* ===== Panneau en Verre (Glassmorphism) ===== */
+    .register-glass-panel {
+        width: 100%;
+        min-height: 100vh;
+        background: rgba(255, 255, 255, 0.15); /* Transparence pour voir l'image derrière */
+        backdrop-filter: blur(25px); /* Effet verre dépoli fort */
+        -webkit-backdrop-filter: blur(25px);
+        border-left: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 3rem 2rem;
-        overflow-y: auto;
+        padding: 3rem 4rem;
+        overflow-y: auto; /* Scrollable si écran trop petit */
     }
 
     .register-form-wrapper {
         width: 100%;
-        max-width: 420px;
+        max-width: 460px;
+        animation: slideUpFade 0.8s ease-out forwards;
     }
 
-    /* En-tête du formulaire */
+    /* ===== Logo ===== */
+    .login-logo-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+        font-size: 2.2rem;
+        background: white;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .login-brand {
+        color: white;
+        font-size: 2rem;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    /* ===== Typographie et En-tête ===== */
     .register-header {
-        text-align: center;
+        text-align: left;
     }
 
     .register-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 700;
-        color: #1a202c;
+        color: #ffffff;
         margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
     }
 
     .register-subtitle {
-        font-size: 0.95rem;
-        color: #718096;
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.85);
         margin: 0;
+        font-weight: 400;
     }
-
-    /* Formulaire */
-    .register-form {
-        animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-
-    .form-group {
-        position: relative;
-    }
-
-    .form-label {
-        font-weight: 600;
-        color: #2d3748;
-        font-size: 0.9rem;
-        margin-bottom: 0.75rem;
-        display: block;
-    }
-
-    .form-control-lg {
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        padding: 0.85rem 1.2rem;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .form-control-lg:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        outline: none;
-    }
-
-    .form-control-lg.is-invalid {
-        border-color: #dc3545;
-    }
-
-    .form-control-lg.is-invalid:focus {
-        border-color: #dc3545;
-        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
-    }
-
-    .invalid-feedback {
-        color: #dc3545;
+    
+    .security-text {
         font-size: 0.85rem;
-        margin-top: 0.25rem;
+        color: rgba(255, 255, 255, 0.6) !important;
     }
 
-    /* Password Input Wrapper */
-    .password-input-wrapper {
+    /* ===== Alertes Personnalisées ===== */
+    .custom-alert-flash {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: #fff;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .custom-invalid-feedback {
+        color: #ff8a8a !important; /* Rouge clair visible sur fond sombre */
+        font-size: 0.85rem;
+        margin-top: 0.35rem;
+        padding-left: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .helper-text {
+        font-size: 0.8rem;
+        padding-left: 0.5rem;
+    }
+
+    /* ===== Inputs et Formulaire ===== */
+    .custom-form-floating label {
+        color: rgba(255, 255, 255, 0.7);
+        padding-left: 1.5rem;
+    }
+
+    .premium-input {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 14px;
+        color: white !important;
+        padding-left: 1.5rem !important;
+        height: calc(3.5rem + 10px);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .premium-input::placeholder {
+        color: transparent !important;
+    }
+
+    .premium-input:focus {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Invalid Input Handling */
+    .premium-input.is-invalid {
+        border-color: #ff8a8a !important;
+        background: rgba(255, 138, 138, 0.1) !important;
+    }
+    .premium-input.is-invalid:focus {
+        box-shadow: 0 0 0 4px rgba(255, 138, 138, 0.2) !important;
+    }
+
+    /* Quand l'input est focus ou rempli, le label change de couleur */
+    .custom-form-floating > .form-control:focus ~ label,
+    .custom-form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: rgba(255, 255, 255, 0.95);
+        transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+    }
+    
+    /* Supprime le rectangle blanc de Bootstrap derrière les labels flottants */
+    .custom-form-floating > .form-control:focus ~ label::after,
+    .custom-form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+    .custom-form-floating > .form-control:-webkit-autofill ~ label::after {
+        background-color: transparent !important;
+    }
+
+    /* Chrome Autofill bg-color fix for beautiful glass inputs */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0) inset !important;
+        -webkit-text-fill-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* Bouton d'œil Mot de passe */
+    .password-wrapper {
         position: relative;
-        display: flex;
-        align-items: center;
     }
-
-    .password-input-wrapper .form-control-lg {
-        padding-right: 2.5rem;
-    }
-
+    
     .password-toggle {
         position: absolute;
         right: 1.2rem;
+        top: 25px; /* Adjust accordingly since form-floating sets height explicitly */
+        transform: translateY(-50%);
         background: none;
         border: none;
-        color: #718096;
+        color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         padding: 0.5rem;
         transition: color 0.3s ease;
+        z-index: 10;
     }
 
     .password-toggle:hover {
-        color: #667eea;
-    }
-
-    /* Boutons */
-    .btn-register-submit,
-    .btn-register-login {
-        border-radius: 10px;
-        padding: 0.85rem 1.5rem;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: none;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .btn-register-submit {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .password-toggle:focus {
+        outline: none;
+    }
+
+    /* ===== Boutons ===== */
+    .btn-register-submit {
+        background: white;
+        color: var(--primary-color);
+        border: none;
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 
     .btn-register-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+        color: var(--secondary-color);
+    }
+
+    .btn-register-submit .icon-right {
+        transition: transform 0.3s ease;
+    }
+    .btn-register-submit:hover .icon-right {
+        transform: translateX(3px);
+    }
+
+    .btn-login-link {
+        background: transparent;
         color: white;
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        display: block;
+        text-align: center;
+        text-decoration: none;
     }
 
-    .btn-register-submit:active {
-        transform: translateY(0);
+    .btn-login-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+        color: white;
+        text-decoration: none;
     }
 
-    .btn-register-login {
-        background: white;
-        color: #667eea;
-        border: 2px solid #e2e8f0;
-    }
-
-    .btn-register-login:hover {
-        background: #f7fafc;
-        border-color: #667eea;
-        color: #764ba2;
-    }
-
-    /* Divider */
+    /* ===== Divider ===== */
     .divider {
         display: flex;
         align-items: center;
-        color: #cbd5e0;
+        color: rgba(255, 255, 255, 0.5);
     }
 
     .divider::before,
@@ -421,33 +495,21 @@
         content: '';
         flex: 1;
         height: 1px;
-        background: #e2e8f0;
+        background: rgba(255, 255, 255, 0.2);
     }
 
     .divider-text {
         padding: 0 1rem;
-        color: #a0aec0;
-        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
         font-weight: 500;
     }
 
-    /* Alertes */
-    .alert {
-        border-radius: 10px;
-        border: none;
-        margin-bottom: 1.5rem;
-    }
-
-    .alert-success {
-        background-color: #c6f6d5;
-        color: #22543d;
-    }
-
     /* ===== Animations ===== */
-    @keyframes fadeInUp {
+    @keyframes slideUpFade {
         from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
         }
         to {
             opacity: 1;
@@ -457,77 +519,38 @@
 
     /* ===== Responsive Design ===== */
     @media (max-width: 992px) {
+        .register-wrapper {
+            justify-content: center;
+        }
+
         .register-container {
-            flex-direction: column;
+            max-width: 100%;
         }
 
-        .register-left {
-            min-height: 250px;
-        }
-
-        .register-left-bg {
-            padding: 2rem;
-        }
-
-        .register-tagline h3 {
-            font-size: 1.5rem;
-        }
-
-        .register-right {
-            padding: 2rem;
-        }
-
-        .register-title {
-            font-size: 1.75rem;
+        .register-glass-panel {
+            padding: 3rem 2rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.1);
         }
     }
 
     @media (max-width: 576px) {
-        .register-left {
-            min-height: 150px;
-        }
-
-        .register-left-bg {
-            padding: 1.5rem;
-        }
-
-        .register-logo h2 {
-            font-size: 1.5rem;
-        }
-
-        .register-tagline h3 {
-            font-size: 1.2rem;
-        }
-
-        .register-tagline p {
-            font-size: 0.9rem;
-        }
-
-        .register-right {
-            padding: 1.5rem;
-        }
-
-        .register-form-wrapper {
-            max-width: 100%;
+        .register-glass-panel {
+            padding: 2rem 1.5rem;
         }
 
         .register-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
         }
 
         .register-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
         }
 
-        .form-control-lg {
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .btn-register-submit,
-        .btn-register-login {
-            padding: 0.75rem 1.2rem;
-            font-size: 0.9rem;
+        .btn-register-submit, .btn-login-link {
+            padding: 0.85rem;
+            font-size: 0.95rem;
         }
 
         .row {

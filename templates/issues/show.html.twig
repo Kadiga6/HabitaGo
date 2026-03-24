@@ -4,218 +4,201 @@
 
 {% block body %}
 <style>
-    .dashboard-container {
-        background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-        min-height: 100vh;
-        padding: 3rem 0;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .card-modern {
-        border: none;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
     }
 
-    .card-modern:hover {
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-        transform: translateY(-8px);
+    .page-header {
+        margin-bottom: 2.5rem;
     }
 
-    .card-header-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1.5rem;
-        border: none;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
-
-    .card-header-modern h4 {
-        margin: 0;
-        font-weight: 600;
+    .page-title {
+        font-weight: 800;
         font-size: 1.5rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
     }
 
-    .card-header-modern small {
-        display: block;
-        opacity: 0.9;
-        margin-top: 0.25rem;
-    }
-
-    .info-card {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        padding: 1.25rem;
-    }
-
-    .info-card h6 {
-        color: #666;
-        font-size: 0.875rem;
+    .detail-label {
+        font-weight: 700;
+        color: #64748b;
+        font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.75rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
     }
 
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        padding: 0.75rem 1.5rem;
+    .detail-value {
         font-weight: 600;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        color: #1e293b;
+        font-size: 1rem;
     }
 
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-outline-secondary {
-        border-color: #6c757d;
-        color: #6c757d;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-outline-secondary:hover {
-        background: #6c757d;
-        border-color: #6c757d;
-        transform: translateY(-2px);
-    }
-
-    .description-box {
-        background: #f8f9fa;
-        border-left: 4px solid #dc3545;
-        border-radius: 8px;
+    .description-card {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0,0,0,0.03);
+        border-radius: 16px;
         padding: 1.5rem;
-        line-height: 1.6;
+        line-height: 1.7;
+        color: #475569;
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .status-timeline {
+        position: relative;
+        padding-left: 2rem;
     }
+
+    .status-timeline::before {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: rgba(102, 126, 234, 0.2);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -2rem;
+        top: 0.25rem;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: white;
+        border: 4px solid #667eea;
+        z-index: 1;
+    }
+
+    .timeline-item.completed::before {
+        background: #22c55e;
+        border-color: #22c55e;
+    }
+
+    .timeline-item.pending::before {
+        background: #f59e0b;
+        border-color: #fef3c7;
+    }
+
 </style>
 
-<div class="dashboard-container">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <a href="{{ path('issues') }}" class="btn btn-outline-secondary mb-3">
-                    <i class="bi bi-arrow-left"></i> Retour à la liste
+<div class="container-fluid animate-fade-in">
+    <header class="page-header d-flex align-items-center gap-3">
+        <a href="{{ path('issues') }}" class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center p-0" style="width: 40px; height: 40px; background: white; border: none;">
+            <i class="bi bi-chevron-left text-primary"></i>
+        </a>
+        <div>
+            <h1 class="page-title mb-0">Détails de l'incident</h1>
+            <p class="text-muted fw-bold mb-0">Suivi #${{ "%03d"|format(incident.id) }} — {{ incident.titre }}</p>
+        </div>
+    </header>
+
+    <div class="row g-4 mb-5">
+        {# Left Column: Details #}
+        <div class="col-lg-8">
+            <div class="glass-card p-4">
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="detail-label">Catégorie</div>
+                        <div class="detail-value d-flex align-items-center gap-2">
+                            {% if incident.categorie == 'plomberie' %}<i class="bi bi-droplet-fill text-primary"></i>
+                            {% elseif incident.categorie == 'electricite' %}<i class="bi bi-lightning-fill text-warning"></i>
+                            {% elseif incident.categorie == 'chauffage' %}<i class="bi bi-thermometer-half text-danger"></i>
+                            {% else %}<i class="bi bi-tools text-secondary"></i>{% endif %}
+                            {{ incident.categorie|capitalize }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Priorité</div>
+                        <div class="detail-value">
+                            <span class="badge-status bg-soft-{{ incident.priorite == 'urgente' ? 'danger' : (incident.priorite == 'haute' ? 'warning' : 'info') }}">
+                                {{ incident.priorite|capitalize }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-label">Date de signalement</div>
+                        <div class="detail-value">{{ incident.dateCreation|date('d/m/Y') }} <span class="text-muted small">à {{ incident.dateCreation|date('H:i') }}</span></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="detail-label mb-3">Description du problème</div>
+                    <div class="description-card">
+                        {{ incident.description|nl2br }}
+                    </div>
+                </div>
+
+                {# Photos Placeholder or Real? (Assuming none based on entity, but good for UI) #}
+                <div class="p-3 rounded-4 border border-dashed border-light text-center py-4">
+                    <i class="bi bi-image text-muted mb-2 d-block" style="font-size: 1.5rem;"></i>
+                    <p class="text-muted small fw-bold mb-0">Aucune photo jointe à ce signalement.</p>
+                </div>
+            </div>
+        </div>
+
+        {# Right Column: Status Timeline #}
+        <div class="col-lg-4">
+            <div class="glass-card p-4">
+                <h3 class="section-title fs-6 mb-4"><i class="bi bi-activity text-primary"></i> État du traitement</h3>
+                
+                <div class="status-timeline">
+                    {# Item: Declaration #}
+                    <div class="timeline-item completed">
+                        <div class="fw-bold text-dark small">Signalement reçu</div>
+                        <div class="text-muted x-small fw-bold">{{ incident.dateCreation|date('d/m/Y H:i') }}</div>
+                    </div>
+
+                    {# Item: Analysis #}
+                    <div class="timeline-item {{ incident.dateResolution ? 'completed' : 'pending' }}">
+                        <div class="fw-bold text-dark small">Analyse technique</div>
+                        {% if incident.dateResolution %}
+                            <div class="text-muted x-small fw-bold">Effectuée par l'équipe maintenance</div>
+                        {% else %}
+                            <div class="text-muted x-small fw-bold">En cours d'examen...</div>
+                        {% endif %}
+                    </div>
+
+                    {# Item: Resolution #}
+                    {% if incident.dateResolution %}
+                    <div class="timeline-item completed">
+                        <div class="fw-bold text-dark small">Résolu</div>
+                        <div class="text-muted x-small fw-bold">{{ incident.dateResolution|date('d/m/Y H:i') }}</div>
+                    </div>
+                    {% else %}
+                    <div class="timeline-item text-muted opacity-50">
+                        <div class="fw-bold small">Intervention & Clôture</div>
+                        <div class="x-small">En attente des étapes précédentes</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if not incident.dateResolution %}
+                <div class="mt-4 p-3 rounded-3 bg-soft-info border-0 small fw-bold text-info">
+                    <i class="bi bi-info-circle me-2"></i> Un technicien vous contactera prochainement pour planifier l'intervention.
+                </div>
+                {% else %}
+                <div class="mt-4 p-3 rounded-3 bg-soft-success border-0 small fw-bold text-success">
+                    <i class="bi bi-check2-circle me-2"></i> Intervention terminée. Si le problème persiste, contactez le gardien.
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mt-4 px-2">
+                <a href="{{ path('issues') }}" class="btn btn-primary w-100 rounded-pill fw-bold shadow-sm py-2">
+                    Retour à la liste
                 </a>
-
-                <div class="card-modern">
-                    <div class="card-header-modern">
-                        <div>
-                            <h4>{{ incident.titre }}</h4>
-                            <small>
-                                Incident #{{ "%03d"|format(incident.id) }}
-                            </small>
-                        </div>
-                        <div>
-                            {% if incident.dateResolution is null %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> En cours</span>
-                            {% else %}
-                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Résolu</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="card-body p-4">
-                        {# Badges informatifs #}
-                        <div class="mb-4">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="info-card">
-                                        <h6>Catégorie</h6>
-                                        <p class="mb-0">
-                                            {% if incident.categorie == 'plomberie' %}
-                                                <i class="bi bi-droplet text-primary"></i> Plomberie
-                                            {% elseif incident.categorie == 'electricite' %}
-                                                <i class="bi bi-lightning text-warning"></i> Électricité
-                                            {% elseif incident.categorie == 'chauffage' %}
-                                                <i class="bi bi-thermometer-half text-danger"></i> Chauffage
-                                            {% elseif incident.categorie == 'serrurerie' %}
-                                                <i class="bi bi-key text-secondary"></i> Serrurerie
-                                            {% else %}
-                                                <i class="bi bi-tools text-muted"></i> Autre
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="info-card">
-                                        <h6>Priorité</h6>
-                                        <p class="mb-0">
-                                            {% if incident.priorite == 'urgente' %}
-                                                <span class="badge bg-danger">Urgente</span> - Intervention sous 24h
-                                            {% elseif incident.priorite == 'haute' %}
-                                                <span class="badge bg-warning text-dark">Haute</span> - Intervention sous 48h
-                                            {% elseif incident.priorite == 'normale' %}
-                                                <span class="badge bg-info">Normale</span> - Intervention sous 5 jours
-                                            {% else %}
-                                                <span class="badge bg-secondary">Basse</span> - Intervention sous 10 jours
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Description #}
-                        <div class="mb-4">
-                            <h5 class="mb-3">Description</h5>
-                            <div class="description-box">{{ incident.description }}</div>
-                        </div>
-
-                        {# Dates #}
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="info-card">
-                                    <h6>Date de déclaration</h6>
-                                    <p class="fs-6 mb-0"><strong>{{ incident.dateCreation|date('d/m/Y à H:i') }}</strong></p>
-                                </div>
-                            </div>
-                            {% if incident.dateResolution %}
-                            <div class="col-md-6">
-                                <div class="info-card">
-                                    <h6>Date de résolution</h6>
-                                    <p class="fs-6 mb-0"><strong>{{ incident.dateResolution|date('d/m/Y à H:i') }}</strong></p>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        {# Statut #}
-                        <div class="alert {% if incident.dateResolution is null %}alert-info{% else %}alert-success{% endif %}" role="alert" style="border-radius: 8px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <i class="bi {% if incident.dateResolution is null %}bi-info-circle{% else %}bi-check-circle{% endif %}"></i>
-                            {% if incident.dateResolution is null %}
-                                Votre incident est en cours de traitement. Nous vous contactons dès que possible.
-                            {% else %}
-                                Votre incident a été résolu le {{ incident.dateResolution|date('d/m/Y') }}.
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                {# Actions #}
-                <div class="mt-4">
-                    <a href="{{ path('issues') }}" class="btn btn-primary">
-                        <i class="bi bi-arrow-left"></i> Retour à la liste
-                    </a>
-                </div>
             </div>
         </div>
     </div>

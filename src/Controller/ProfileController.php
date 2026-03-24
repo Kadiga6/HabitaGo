@@ -31,7 +31,7 @@ class ProfileController extends AbstractController
         $housing = null;
         if ($logement) {
             $housing = [
-                'address' => $logement->getAdresse(),
+                'adresse' => $logement->getAdresse(),
                 'codePostal' => $logement->getCodePostal(),
                 'ville' => $logement->getVille(),
                 'typeLogement' => $logement->getTypeLogement(),

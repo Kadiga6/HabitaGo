@@ -62,18 +62,22 @@ class PaiementMetierService
         // Récupérer le mois de la date_debut
         $moisDebut = (int) $contrat->getDateDebut()->format('m');
 
-        // Chercher le mois de la période
-        if (!isset($moisMap[$periodeLower])) {
+        // Chercher le mois de la période (extraire le premier mot si y'a une année)
+        $parts = explode(' ', $periodeLower);
+        $moisNom = $parts[0];
+        $anneePeriode = isset($parts[1]) ? (int)$parts[1] : (int)date('Y');
+
+        if (!isset($moisMap[$moisNom])) {
             throw new \InvalidArgumentException("Période invalide : {$periode}");
         }
 
-        $moisPeriode = $moisMap[$periodeLower];
+        $moisPeriode = $moisMap[$moisNom];
 
         // Calculer la différence en mois
         $anneeDebut = (int) $contrat->getDateDebut()->format('Y');
-        $deltaAnnee = 0; // À améliorer si périodes multi-années
+        $deltaAnnee = $anneePeriode - $anneeDebut;
 
-        return $moisPeriode - $moisDebut + ($deltaAnnee * 12);
+        return ($moisPeriode - $moisDebut) + ($deltaAnnee * 12);
     }
 
     
@@ -150,11 +154,10 @@ class PaiementMetierService
         // Limiter à la date actuelle
         $dateFinPeriode = min($maintenant, $dateFin);
 
-        // Commencer 1 mois après le début
+        // Commencer au mois du début du contrat
         $dateActuelle = clone $dateDebut;
-        $dateActuelle->modify('+1 month');
 
-        $numeroMois = 1;
+        $numeroMois = 0;
 
         while ($dateActuelle <= $dateFinPeriode) {
             $periode = $this->formatePeriode($dateActuelle);
@@ -186,6 +189,35 @@ class PaiementMetierService
     }
 
     /**
+     * Calcule les statistiques de paiement pour un utilisateur.
+     */
+    public function getStatsForUser(\App\Entity\Utilisateur $user): array
+    {
+        $contrats = $this->em->getRepository(\App\Entity\Contrat::class)->findBy(['utilisateur' => $user]);
+        $paiements = [];
+        
+        foreach ($contrats as $contrat) {
+            // S'assurer que les paiements sont à jour
+            $this->genererPaiementsAttendus($contrat);
+            $repo = $this->em->getRepository(\App\Entity\Paiement::class);
+            $paiements = array_merge($paiements, $repo->findBy(['contrat' => $contrat]));
+        }
+
+        // Mettre à jour les statuts en temps réel
+        foreach ($paiements as $p) {
+            $this->determinerStatut($p);
+        }
+        $this->em->flush();
+
+        return [
+            'payes' => count(array_filter($paiements, fn($p) => $p->getStatut() === 'paye')),
+            'en_attente' => count(array_filter($paiements, fn($p) => $p->getStatut() === 'en_attente')),
+            'en_retard' => count(array_filter($paiements, fn($p) => $p->getStatut() === 'en_retard')),
+            'total_attendu' => count($paiements),
+        ];
+    }
+
+    /**
      * Formate une date en "janvier", "février", etc.
      */
     private function formatePeriode(\DateTime $date): string
@@ -197,7 +229,7 @@ class PaiementMetierService
         ];
 
         $mois = (int) $date->format('m');
-        return $moisFr[$mois];
+        return $moisFr[$mois] . ' ' . $date->format('Y');
     }
 
     /**
@@ -219,32 +251,24 @@ class PaiementMetierService
             return $erreurs;
         }
 
- // Vérifier que le paiement est autorisé
+        $contrat = $paiement->getContrat();
+        $dateDebut = $contrat->getDateDebut();
 
-$contrat = $paiement->getContrat();
-$dateDebut = $contrat->getDateDebut();
+        if (!$dateDebut) {
+            $erreurs[] = "Le contrat ne possède pas de date de début valide.";
+            return $erreurs;
+        }
 
-// Sécurité : le contrat doit avoir une date de début
-if (!$dateDebut) {
-    $erreurs[] = "Le contrat ne possède pas de date de début valide.";
-    return $erreurs;
-}
+        $dateEcheance = (clone $dateDebut)->modify('+1 month');
 
-// Calcul de la date d’échéance (première échéance = +1 mois)
-$dateEcheance = (clone $dateDebut)->modify('+1 month');
+        if (!$this->estPaiementAutorise($contrat, $dateEcheance)) {
+            $erreurs[] = sprintf(
+                "Paiement refusé : la date d’échéance (%s) est antérieure à la date d’entrée (%s).",
+                $dateEcheance->format('d/m/Y'),
+                $dateDebut->format('d/m/Y')
+            );
+        }
 
-// Validation métier
-if (!$this->estPaiementAutorise($contrat, $dateEcheance)) {
-    $erreurs[] = sprintf(
-        "Paiement refusé : la date d’échéance (%s) est antérieure à la date d’entrée (%s).",
-        $dateEcheance->format('d/m/Y'),
-        $dateDebut->format('d/m/Y')
-    );
-}
-
-
-
-        // Vérifier l'unicité du paiement
         $paiementExistant = $this->em->getRepository(Paiement::class)
             ->findOneBy([
                 'contrat' => $paiement->getContrat(),
