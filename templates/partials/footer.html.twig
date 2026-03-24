@@ -1,0 +1,281 @@
+  {# Footer moderne et responsive #}
+<style>
+    /* Footer moderne */
+    .footer-modern {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-top: 2px solid;
+        border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%) 1;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+        padding: 3rem 0 1.5rem 0;
+        margin-top: 4rem;
+        position: relative;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    /* Footer sections */
+    .footer-section {
+        margin-bottom: 2rem;
+    }
+
+    .footer-section h5 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 0.7rem;
+    }
+
+    .footer-section a {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .footer-section a::before {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transition: width 0.3s ease;
+    }
+
+    .footer-section a:hover {
+        color: #667eea;
+    }
+
+    .footer-section a:hover::before {
+        width: 100%;
+    }
+
+    /* Contact info */
+    .contact-info {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .contact-info i {
+        color: #667eea;
+        font-size: 1.1rem;
+        min-width: 20px;
+    }
+
+    .contact-info a {
+        color: #667eea;
+    }
+
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+
+    /* Social links */
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(102, 126, 234, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 1.1rem;
+    }
+
+    .social-link:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+        border-top: 1px solid #e9ecef;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-bottom p {
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .footer-bottom a {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+
+    .footer-bottom a:hover {
+        text-decoration: underline;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-links {
+            justify-content: center;
+        }
+
+        .footer-section {
+            text-align: center;
+        }
+
+        .social-links {
+            justify-content: center;
+        }
+
+        .footer-modern {
+            padding: 2rem 0 1rem 0;
+            margin-top: 2rem;
+        }
+    }
+</style>
+
+<footer class="footer-modern">
+    <div class="footer-content">
+        <div class="row">
+            {# Colonne 1: À propos #}
+            <div class="col-md-3 col-sm-6 footer-section">
+                <h5>
+                    <i class="bi bi-house-door"></i>
+                    À propos
+                </h5>
+                <ul>
+                    <li><a href="#">Qui sommes-nous</a></li>
+                    <li><a href="#">Notre mission</a></li>
+                    <li><a href="#">Nos valeurs</a></li>
+                    <li><a href="#">Carrières</a></li>
+                </ul>
+            </div>
+
+            {# Colonne 2: Aide et Support #}
+            <div class="col-md-3 col-sm-6 footer-section">
+                <h5>
+                    <i class="bi bi-question-circle"></i>
+                    Aide & Support
+                </h5>
+                <ul>
+                    <li><a href="#">Centre d'aide</a></li>
+                    <li><a href="#">Contactez-nous</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Signaler un problème</a></li>
+                </ul>
+            </div>
+
+            {# Colonne 3: Ressources #}
+            <div class="col-md-3 col-sm-6 footer-section">
+                <h5>
+                    <i class="bi bi-book"></i>
+                    Ressources
+                </h5>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Tutoriels</a></li>
+                </ul>
+            </div>
+
+            {# Colonne 4: Contact #}
+            <div class="col-md-3 col-sm-6 footer-section">
+                <h5>
+                    <i class="bi bi-telephone"></i>
+                    Contact
+                </h5>
+                <div class="contact-info">
+                    <i class="bi bi-envelope"></i>
+                    <a href="mailto:support@habitago.fr">support@habitago.fr</a>
+                </div>
+                <div class="contact-info">
+                    <i class="bi bi-telephone"></i>
+                    <a href="tel:+33123456789">+33 1 23 45 67 89</a>
+                </div>
+                <div class="contact-info">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Paris, France</span>
+                </div>
+
+                {# Social links #}
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Footer bottom #}
+        <div class="footer-bottom">
+            <p>&copy; 2026 <strong>HabitaGo</strong>. Tous droits réservés.</p>
+            <div class="footer-links">
+                <a href="#">Conditions d'utilisation</a>
+                <a href="#">Politique de confidentialité</a>
+                <a href="#">Politique de cookies</a>
+            </div>
+        </div>
+    </div>
+</footer>

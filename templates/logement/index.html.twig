@@ -406,62 +406,7 @@
 
         </div>
 
-        {# BLOC 3 - Résumé des consommations #}
-        <div class="section-spacing">
-            <div class="card-modern">
-                <div class="card-header-modern">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="bi bi-lightning-charge"></i>
-                            Consommations Récentes
-                        </h5>
-                        <a href="{{ path('consumption') }}" class="btn btn-modern btn-modern-primary">
-                            Voir tous les détails <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card-body-modern">
-                    {% if consommations|length > 0 %}
-                        <div class="row g-3">
-                            {% for consommation in consommations %}
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="consumption-card">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h6 class="consumption-title">
-                                                    {% if consommation.unite|lower == 'kwh' or consommation.unite|lower == 'kWh' %}
-                                                        <i class="bi bi-lightning-charge icon-electricity me-2"></i>Électricité
-                                                    {% elseif consommation.unite|lower == 'm3' %}
-                                                        <i class="bi bi-droplet icon-water me-2"></i>Eau
-                                                    {% elseif consommation.unite|lower == 'm3 gaz' or consommation.unite|lower == 'kwh gaz' %}
-                                                        <i class="bi bi-fire icon-gas me-2"></i>Gaz
-                                                    {% else %}
-                                                        {{ consommation.unite }}
-                                                    {% endif %}
-                                                </h6>
-                                                <div class="consumption-value">
-                                                    {{ consommation.valeur|number_format(2, ',', ' ') }}
-                                                    <span class="consumption-unit">{{ consommation.unite }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="consumption-period">
-                                            📅 {{ consommation.periodeDebut|date('d/m') }} - {{ consommation.periodeFin|date('d/m/Y') }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info border-0" style="background: linear-gradient(135deg, #d1ecf1 0%, #e7f5f8 100%); border-radius: 10px; color: #0c5460;">
-                            <i class="bi bi-info-circle me-2" style="font-size: 1.3rem;"></i>
-                            Aucune consommation enregistrée pour le moment.
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+       
     </div>
 </div>
 {% endblock %}
